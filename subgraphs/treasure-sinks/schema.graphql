@@ -1,0 +1,14 @@
+type Token @entity {
+  id: ID!
+
+  name: String!
+  quantity: Int!
+  tokenId: BigInt!
+}
+
+type Sink @entity {
+  id: ID!
+
+  name: String!
+  tokens: [Token!]!
+}

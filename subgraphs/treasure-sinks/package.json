@@ -1,0 +1,14 @@
+{
+  "name": "treasure-sinks",
+  "version": "1.0.0",
+  "description": "A subgraph for the sinks of Treasures.",
+  "license": "MIT",
+  "scripts": {
+    "codegen": "graph codegen",
+    "deploy:dev": "graph deploy --product hosted-service wyze/treasure-sinks",
+    "deploy:prod": "graph deploy --product hosted-service wyze/treasure-sinks",
+    "prepare:dev": "yarn --cwd ../../packages/constants prepare:arbitrum-testnet && mustache ../../node_modules/@shared/subgraph-config/src/arbitrum-testnet.json template.yaml > subgraph.yaml",
+    "prepare:prod": "yarn --cwd ../../packages/constants prepare:arbitrum && mustache ../../node_modules/@shared/subgraph-config/src/arbitrum.json template.yaml > subgraph.yaml",
+    "test": "exit 0 && graph test"
+  }
+}
