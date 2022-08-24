@@ -46,6 +46,9 @@
   "treasure_fragment_address": "0x756E4F3bb69c47d492aBf2a52af320190c174c55",
   "treasure_fragment_start_block": 11370538,
 
+  "shinoba_nft_handler_address": "0x85f1bfd98e190b482d5348fd6c987ae3da7a4df6",
+  "kameji_nft_handler_address": "0xa0515709fa0f520241659a91d868151e1ad263d8",
+
   "extra_life_address": "0x21e1969884D477afD2Afd4Ad668864a0EebD644c",
   "extra_life_start_block": 2416557,
   "keys_address": "0xf0a35bA261ECE4FC12870e5B7b9E7790202EF9B5",

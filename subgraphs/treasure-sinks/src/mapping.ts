@@ -5,7 +5,9 @@ import {
   ATLAS_MINE_ADDRESS,
   CRAFTING_ADDRESS,
   DEAD_ADDRESS,
+  KAMEJI_NFT_HANDLER_ADDRESS,
   SEED_EVOLUTION_ADDRESS,
+  SHINOBA_NFT_HANDLER_ADDRESS,
   SMOLOVE_FORGE_ADDRESS,
   TREASURY_ADDRESS,
 } from "@shared/constants";
@@ -17,6 +19,8 @@ const SINKS = [
   ADVANCED_QUESTING_ADDRESS,
   ATLAS_MINE_ADDRESS,
   CRAFTING_ADDRESS,
+  KAMEJI_NFT_HANDLER_ADDRESS,
+  SHINOBA_NFT_HANDLER_ADDRESS,
   TREASURY_ADDRESS,
   SEED_EVOLUTION_ADDRESS,
   SMOLOVE_FORGE_ADDRESS,
@@ -140,6 +144,14 @@ function getSinkName(address: string): string {
 
   if (address == TREASURY_ADDRESS.toHexString()) {
     return "Broken";
+  }
+
+  if (address == KAMEJI_NFT_HANDLER_ADDRESS.toHexString()) {
+    return "Kameji";
+  }
+
+  if (address == SHINOBA_NFT_HANDLER_ADDRESS.toHexString()) {
+    return "Shinoba";
   }
 
   if (address == SEED_EVOLUTION_ADDRESS.toHexString()) {
