@@ -11,7 +11,7 @@ jobs:
     name: Detect Changes
     runs-on: ubuntu-latest
     outputs:
-      treasure_sinks: ${{ steps.filter.outputs.bridgeworld }}
+      treasure_sinks: ${{ steps.filter.outputs.treasure_sinks }}
     steps:
     - name: Check out code
       uses: actions/checkout@v2
