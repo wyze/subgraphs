@@ -2,6 +2,7 @@ import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 
 import {
   ADVANCED_QUESTING_ADDRESS,
+  ASITERRA_NFT_HANDLER_ADDRESS,
   ATLAS_MINE_ADDRESS,
   CRAFTING_ADDRESS,
   DEAD_ADDRESS,
@@ -17,6 +18,7 @@ import { Sink, Token } from "../generated/schema";
 
 const SINKS = [
   ADVANCED_QUESTING_ADDRESS,
+  ASITERRA_NFT_HANDLER_ADDRESS,
   ATLAS_MINE_ADDRESS,
   CRAFTING_ADDRESS,
   KAMEJI_NFT_HANDLER_ADDRESS,
@@ -132,6 +134,10 @@ function getToken(address: string, tokenId: BigInt): Token {
 function getSinkName(address: string): string {
   if (address == ADVANCED_QUESTING_ADDRESS.toHexString()) {
     return "Ivory Tower";
+  }
+
+  if (address == ASITERRA_NFT_HANDLER_ADDRESS.toHexString()) {
+    return "Asiterra";
   }
 
   if (address == ATLAS_MINE_ADDRESS.toHexString()) {
