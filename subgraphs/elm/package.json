@@ -11,6 +11,6 @@
     "prepare:constants": "yarn --cwd ../../packages/constants prepare:arbitrum",
     "prepare:schema": "cp ../../packages/erc20/schema.graphql .",
     "prepare:subgraph": "mustache ../../node_modules/@shared/subgraph-config/src/arbitrum.json template.yaml > subgraph.yaml",
-    "test": "exit 0 && graph test"
+    "test": "exit 0 && graph test "
   }
 }
