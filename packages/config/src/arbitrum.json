@@ -25,7 +25,7 @@
   "legion_metadata_store_address": "0x99193EE9229b833d2aA4DbBdA697C6600b944286",
   "legion_metadata_store_start_block": 4956057,
   "magic_address": "0x539bdE0d7Dbd336b79148AA742883198BBF60342",
-  "magic_start_block": 2416540,
+  "magic_start_block": 2028077,
   "pilgrimage_address": "0xD661A18E824c8d2EDf3BADF75aeDDa5B7D142448",
   "pilgrimage_start_block": 4956132,
   "questing_address": "0xDA3caD5e4F40062CECa6c1B979766BC0BAed8e33",
@@ -98,6 +98,9 @@
   "battlefly_founders_address": "0xc43104775bd9f6076808b5f8df6cbdbeac96d7de",
   "battlefly_founders_start_block": 7242255,
 
+  "flywheel_smolverse_address": "0xccb747d04ae0b127075929b28084f11920491929",
+  "flywheel_smolverse_start_block": 20689307,
+
   "treasure_marketplace_buyer_address": "0x812cda2181ed7c45a35a691e0c85e231d218e273",
   "treasure_marketplace_address": "0x2E3b85F85628301a0Bce300Dee3A6B04195A15Ee",
   "treasure_marketplace_start_block": 2983469,
@@ -111,12 +114,17 @@
   "realm_address": "0x4de95c1e202102e22e801590c51d7b979f167fbb",
   "realm_start_block": 758297,
 
+  "realm_vault_address": "0x106d0fd9321d63627cf813c30622ee251c773b7b",
+
   "tales_of_elleria_address": "0x7480224ec2b98f28cee3740c80940a2f489bf352",
   "tales_of_elleria_start_block": 8701560,
   "tales_of_elleria_data_address": "0x7A0D491469fb5D7D3aDbF186221891AfE3b5d028",
   "tales_of_elleria_data_start_block": 8701736,
   "tales_of_elleria_relics_address": "0x381227255eF6c5d85966b78d13e4B4a4c8719b5E",
   "tales_of_elleria_relics_start_block": 12941260,
+
+  "elm_address": "0x45D55EADf0ED5495B369E040aF0717eaFaE3b731",
+  "elm_start_block": 21016721,
 
   "smithonia_weapons_address": "0x00000000016c35e3613ad3ed484aa48f161b67fd",
   "smithonia_weapons_start_block": 8971700,
@@ -125,6 +133,9 @@
   "toadstoolz_start_block": 9816777,
   "toadstoolz_itemz_address": "0x5e0ba87362f239bDBF40E621Fa11DBD50d190389",
   "toadstoolz_itemz_start_block": 9816829,
+
+  "wartlocks_hallow_address": "0x8eC2Cf229E7A7dFfe0Bf11663bd304bf2dd80326",
+  "wartlocks_hallow_start_block": 16539442,
 
   "kote_squires_address": "0xF7fBE8EEc9063AA518D11639565B018468bB4AbB",
   "kote_squires_start_block": 10050034,
@@ -146,6 +157,12 @@
   "lost_donkeys_start_block": 11440957,
 
   "smolove_forge_address": "0xf6d2c864ce0bbbe3824c72995d99fab0f3a0f260",
+
+  "usdc_address": "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+  "usdc_start_block": 2609,
+
+  "trove_address": "0x09986b4e255b3c548041a30a2ee312fe176731c2",
+  "trove_start_block": 14550185,
 
   "hourly_stat_interval_start_block": 6470000
 }

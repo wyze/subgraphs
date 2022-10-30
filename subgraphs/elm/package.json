@@ -5,7 +5,6 @@
   "license": "MIT",
   "scripts": {
     "codegen": "graph codegen",
-    "build": "graph build --ipfs $GRAPH_IPFS_ENDPOINT",
     "create": "graph create --node $GRAPH_NODE_ENDPOINT elm",
     "deploy": "graph deploy elm --ipfs $GRAPH_IPFS_ENDPOINT --node $GRAPH_NODE_ENDPOINT --version-label v0.0.0",
     "prepare": "run-s prepare:*",
