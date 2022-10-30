@@ -1,0 +1,13 @@
+name: ELM Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    uses: ./github/workflows/deploy.yaml
+    with:
+      filters: .github/erc20-filters.yaml
+      subgraph: elm

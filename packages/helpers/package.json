@@ -1,0 +1,8 @@
+{
+  "name": "@shared/helpers",
+  "version": "1.0.0",
+  "description": "Configuration data for the subgraphs",
+  "license": "MIT",
+  "private": true,
+  "main": "index.ts"
+}

@@ -1,0 +1,4 @@
+subgraph:
+  - "packages/abis/src/20.json"
+  - "packages/erc20/**"
+  - "packages/helpers/**"

@@ -1,0 +1,17 @@
+{
+  "name": "elm",
+  "version": "1.0.0",
+  "description": "A subgraph for ELM.",
+  "license": "MIT",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build --ipfs $GRAPH_IPFS_ENDPOINT",
+    "create": "graph create --node $GRAPH_NODE_ENDPOINT elm",
+    "deploy": "graph deploy elm --ipfs $GRAPH_IPFS_ENDPOINT --node $GRAPH_NODE_ENDPOINT --version-label v0.0.0",
+    "prepare": "run-s prepare:*",
+    "prepare:constants": "yarn --cwd ../../packages/constants prepare:arbitrum",
+    "prepare:schema": "cp ../../packages/erc20/schema.graphql .",
+    "prepare:subgraph": "mustache ../../node_modules/@shared/subgraph-config/src/arbitrum.json template.yaml > subgraph.yaml",
+    "test": "exit 0 && graph test"
+  }
+}
