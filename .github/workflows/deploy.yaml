@@ -61,6 +61,11 @@ jobs:
       - name: Download deps
         uses: bahmutov/npm-install@v1
 
+      - name: Setup environment
+        uses: Firenza/secrets-to-env@v1.2.0
+        with:
+            secrets: ${{ toJSON(secrets) }}
+
       - name: Prepare
         run: yarn prepare
 
