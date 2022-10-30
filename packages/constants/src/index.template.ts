@@ -14,6 +14,9 @@ export const DEAD_ADDRESS = Address.fromString("{{ dead_address }}");
 export const KAMEJI_NFT_HANDLER_ADDRESS = Address.fromString(
   "{{ kameji_nft_handler_address }}"
 );
+export const REALM_VAULT_ADDRESS = Address.fromString(
+  "{{ realm_vault_address }}"
+);
 export const SHINOBA_NFT_HANDLER_ADDRESS = Address.fromString(
   "{{ shinoba_nft_handler_address }}"
 );
@@ -23,4 +26,6 @@ export const SEED_EVOLUTION_ADDRESS = Address.fromString(
 export const SMOLOVE_FORGE_ADDRESS = Address.fromString(
   "{{ smolove_forge_address }}"
 );
+export const TREASURE_ADDRESS = Address.fromString("{{ treasure_address }}");
 export const TREASURY_ADDRESS = Address.fromString("{{ treasury_address }}");
+export const TROVE_ADDRESS = Address.fromString("{{ trove_address }}");
