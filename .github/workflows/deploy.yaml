@@ -69,5 +69,8 @@ jobs:
       - name: Prepare
         run: yarn prepare
 
+      - name: Generate
+        run: yarn codegen
+
       - name: Deploy
         run: yarn deploy
