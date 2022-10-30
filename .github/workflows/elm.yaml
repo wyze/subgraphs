@@ -11,3 +11,4 @@ jobs:
     with:
       filters: .github/erc20-filters.yaml
       subgraph: elm
+    secrets: inherit
