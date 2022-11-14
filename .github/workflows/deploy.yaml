@@ -72,5 +72,12 @@ jobs:
       - name: Generate
         run: yarn codegen
 
+      - name: Authenticate
+        run: yarn graph auth --product hosted-service ${{ secrents.GRAPH_TOKEN }}
+
       - name: Deploy
+        run: yarn graph deploy --product hosted-service wyze/${{ inputs.subgraph }}
+
+      - name: Deploy
+        if: ${{ failure() }}
         run: yarn deploy
