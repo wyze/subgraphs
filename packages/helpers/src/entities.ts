@@ -8,9 +8,9 @@ import {
 } from "@graphprotocol/graph-ts";
 
 export class Approval extends Entity {
-  constructor(id: string) {
+  constructor(id: Bytes) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromBytes(id));
   }
 
   save(): void {
@@ -18,10 +18,10 @@ export class Approval extends Entity {
     assert(id != null, "Cannot save Approval entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type Approval must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        id.kind == ValueKind.BYTES,
+        `Entities of type Approval must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Approval", id.toString(), this);
+      store.set("Approval", id.toBytes().toHexString(), this);
     }
   }
 
@@ -33,16 +33,16 @@ export class Approval extends Entity {
     this.set("blockTimestamp", Value.fromI32(value));
   }
 
-  set operator(value: string) {
-    this.set("operator", Value.fromString(value));
+  set operator(value: Bytes) {
+    this.set("operator", Value.fromBytes(value));
   }
 
-  set owner(value: string) {
-    this.set("owner", Value.fromString(value));
+  set owner(value: Bytes) {
+    this.set("owner", Value.fromBytes(value));
   }
 
-  set value(value: BigDecimal) {
-    this.set("value", Value.fromBigDecimal(value));
+  set value(value: Value) {
+    this.set("value", value);
   }
 }
 
@@ -71,9 +71,9 @@ export class Token extends Entity {
 }
 
 export class Transfer extends Entity {
-  constructor(id: string) {
+  constructor(id: Bytes) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromBytes(id));
   }
 
   save(): void {
@@ -81,19 +81,15 @@ export class Transfer extends Entity {
     assert(id != null, "Cannot save Transfer entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type Transfer must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        id.kind == ValueKind.BYTES,
+        `Entities of type Transfer must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Transfer", id.toString(), this);
+      store.set("Transfer", id.toBytes().toHexString(), this);
     }
   }
 
-  set amount(value: BigDecimal) {
-    this.set("amount", Value.fromBigDecimal(value));
-  }
-
-  set tokenId(value: i32) {
-    this.set("tokenId", Value.fromI32(value));
+  set amount(value: Value) {
+    this.set("amount", value);
   }
 
   set blockNumber(value: i32) {
@@ -104,16 +100,16 @@ export class Transfer extends Entity {
     this.set("blockTimestamp", Value.fromI32(value));
   }
 
-  set operator(value: string) {
-    this.set("operator", Value.fromString(value));
+  set from(value: Bytes) {
+    this.set("from", Value.fromBytes(value));
   }
 
-  set from(value: string) {
-    this.set("from", Value.fromString(value));
+  set operator(value: Bytes) {
+    this.set("operator", Value.fromBytes(value));
   }
 
-  set to(value: string) {
-    this.set("to", Value.fromString(value));
+  set to(value: Bytes) {
+    this.set("to", Value.fromBytes(value));
   }
 
   set token(value: Bytes) {

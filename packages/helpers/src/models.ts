@@ -30,9 +30,6 @@ function getTreasureToken(tokenId: i32): Token {
     return token;
   }
 
-  // All tokens share this
-  // token.tokenId = tokenId;
-
   // Set specific token information
   token.set(
     "boost",
