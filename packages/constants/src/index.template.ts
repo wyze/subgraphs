@@ -29,3 +29,4 @@ export const SMOLOVE_FORGE_ADDRESS = Address.fromString(
 export const TREASURE_ADDRESS = Address.fromString("{{ treasure_address }}");
 export const TREASURY_ADDRESS = Address.fromString("{{ treasury_address }}");
 export const TROVE_ADDRESS = Address.fromString("{{ trove_address }}");
+export const USDC_ADDRESS = Address.fromString("{{ usdc_address }}");

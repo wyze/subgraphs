@@ -1,17 +1,17 @@
 type Approval @entity(immutable: true) {
-  id: ID!
+  id: Bytes!
 
   blockNumber: Int!
   blockTimestamp: Int!
-  operator: String!
-  owner: String!
+  operator: Bytes!
+  owner: User!
 
   "Value converted to a decimal"
   value: BigDecimal!
 }
 
 type Daily @entity {
-  id: ID!
+  id: Bytes!
 
   date: Int!
 
@@ -35,31 +35,46 @@ type Daily @entity {
 }
 
 type Transfer @entity(immutable: true) {
-  id: ID!
+  id: Bytes!
 
   "Amount converted to a decimal"
   amount: BigDecimal!
 
   blockNumber: Int!
   blockTimestamp: Int!
-  from: String!
-  to: String!
+  from: User!
+  to: User!
 }
 
 type User @entity {
-  id: ID!
+  id: Bytes!
 
   "Running user balance"
   balance: BigDecimal!
 
+  received: BigDecimal!
+  receivedCount: Int!
+
+  sent: BigDecimal!
+  sentCount: Int!
+
+  approvals: [Approval!]! @derivedFrom(field: "owner")
   daily: [UserDaily!]! @derivedFrom(field: "user")
+  transfersIn: [Transfer!]! @derivedFrom(field: "to")
+  transfersOut: [Transfer!]! @derivedFrom(field: "from")
 }
 
 type UserDaily @entity {
-  id: ID!
+  id: Bytes!
 
   date: Int!
   user: User!
 
   balance: BigDecimal!
+
+  received: BigDecimal!
+  receivedCount: Int!
+
+  sent: BigDecimal!
+  sentCount: Int!
 }

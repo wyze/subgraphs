@@ -1,9 +1,16 @@
-import { BigDecimal, Entity, store, Value, ValueKind } from "@graphprotocol/graph-ts";
+import {
+  BigDecimal,
+  Bytes,
+  Entity,
+  Value,
+  ValueKind,
+  store,
+} from "@graphprotocol/graph-ts";
 
 export class Daily extends Entity {
-  constructor(id: string) {
+  constructor(id: Bytes) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromBytes(id));
   }
 
   save(): void {
@@ -11,29 +18,15 @@ export class Daily extends Entity {
     assert(id != null, "Cannot save Daily entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type Daily must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        id.kind == ValueKind.BYTES,
+        `Entities of type Daily must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Daily", id.toString(), this);
+      store.set("Daily", id.toBytes().toHexString(), this);
     }
   }
 
-  static load(id: string): Daily | null {
-    return changetype<Daily | null>(store.get("Daily", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get date(): i32 {
-    let value = this.get("date");
-    return value!.toI32();
+  static load(id: Bytes): Daily | null {
+    return changetype<Daily | null>(store.get("Daily", id.toHexString()));
   }
 
   set date(value: i32) {
@@ -95,11 +88,10 @@ export class Daily extends Entity {
   }
 }
 
-
 export class User extends Entity {
-  constructor(id: string) {
+  constructor(id: Bytes) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromBytes(id));
   }
 
   save(): void {
@@ -107,24 +99,20 @@ export class User extends Entity {
     assert(id != null, "Cannot save User entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type User must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        id.kind == ValueKind.BYTES,
+        `Entities of type User must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("User", id.toString(), this);
+      store.set("User", id.toBytes().toHexString(), this);
     }
   }
 
-  static load(id: string): User | null {
-    return changetype<User | null>(store.get("User", id));
+  static load(id: Bytes): User | null {
+    return changetype<User | null>(store.get("User", id.toHexString()));
   }
 
-  get id(): string {
+  get id(): Bytes {
     let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
+    return value!.toBytes();
   }
 
   get balance(): BigDecimal {
@@ -136,20 +124,47 @@ export class User extends Entity {
     this.set("balance", Value.fromBigDecimal(value));
   }
 
-  get daily(): Array<string> {
-    let value = this.get("daily");
-    return value!.toStringArray();
+  get received(): BigDecimal {
+    let value = this.get("received");
+    return value!.toBigDecimal();
   }
 
-  set daily(value: Array<string>) {
-    this.set("daily", Value.fromStringArray(value));
+  set received(value: BigDecimal) {
+    this.set("received", Value.fromBigDecimal(value));
+  }
+
+  get receivedCount(): i32 {
+    let value = this.get("receivedCount");
+    return value!.toI32();
+  }
+
+  set receivedCount(value: i32) {
+    this.set("receivedCount", Value.fromI32(value));
+  }
+
+  get sent(): BigDecimal {
+    let value = this.get("sent");
+    return value!.toBigDecimal();
+  }
+
+  set sent(value: BigDecimal) {
+    this.set("sent", Value.fromBigDecimal(value));
+  }
+
+  get sentCount(): i32 {
+    let value = this.get("sentCount");
+    return value!.toI32();
+  }
+
+  set sentCount(value: i32) {
+    this.set("sentCount", Value.fromI32(value));
   }
 }
 
 export class UserDaily extends Entity {
-  constructor(id: string) {
+  constructor(id: Bytes) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromBytes(id));
   }
 
   save(): void {
@@ -157,24 +172,17 @@ export class UserDaily extends Entity {
     assert(id != null, "Cannot save UserDaily entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type UserDaily must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        id.kind == ValueKind.BYTES,
+        `Entities of type UserDaily must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("UserDaily", id.toString(), this);
+      store.set("UserDaily", id.toBytes().toHexString(), this);
     }
   }
 
-  static load(id: string): UserDaily | null {
-    return changetype<UserDaily | null>(store.get("UserDaily", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
+  static load(id: Bytes): UserDaily | null {
+    return changetype<UserDaily | null>(
+      store.get("UserDaily", id.toHexString())
+    );
   }
 
   get date(): i32 {
@@ -186,13 +194,8 @@ export class UserDaily extends Entity {
     this.set("date", Value.fromI32(value));
   }
 
-  get user(): string {
-    let value = this.get("user");
-    return value!.toString();
-  }
-
-  set user(value: string) {
-    this.set("user", Value.fromString(value));
+  set user(value: Bytes) {
+    this.set("user", Value.fromBytes(value));
   }
 
   get balance(): BigDecimal {
@@ -202,5 +205,41 @@ export class UserDaily extends Entity {
 
   set balance(value: BigDecimal) {
     this.set("balance", Value.fromBigDecimal(value));
+  }
+
+  get received(): BigDecimal {
+    let value = this.get("received");
+    return value!.toBigDecimal();
+  }
+
+  set received(value: BigDecimal) {
+    this.set("received", Value.fromBigDecimal(value));
+  }
+
+  get receivedCount(): i32 {
+    let value = this.get("receivedCount");
+    return value!.toI32();
+  }
+
+  set receivedCount(value: i32) {
+    this.set("receivedCount", Value.fromI32(value));
+  }
+
+  get sent(): BigDecimal {
+    let value = this.get("sent");
+    return value!.toBigDecimal();
+  }
+
+  set sent(value: BigDecimal) {
+    this.set("sent", Value.fromBigDecimal(value));
+  }
+
+  get sentCount(): i32 {
+    let value = this.get("sentCount");
+    return value!.toI32();
+  }
+
+  set sentCount(value: i32) {
+    this.set("sentCount", Value.fromI32(value));
   }
 }
