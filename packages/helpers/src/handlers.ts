@@ -44,9 +44,9 @@ export function handleApproval(
   approval.save();
 }
 
-export function handleTransfer<Params extends TransferParams>(
+export function handleTransfer(
   event: ethereum.Event,
-  params: Params
+  params: TransferParams
 ): void {
   const transfer = new Transfer(getId(event));
   const block = event.block;
