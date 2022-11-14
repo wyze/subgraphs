@@ -161,6 +161,9 @@
   "usdc_address": "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
   "usdc_start_block": 2609,
 
+  "weth_address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+  "weth_start_block": 55,
+
   "trove_address": "0x09986b4e255b3c548041a30a2ee312fe176731c2",
   "trove_start_block": 14550185,
 
