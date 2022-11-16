@@ -1,0 +1,8 @@
+{
+  "name": "@shared/erc1155",
+  "version": "1.0.0",
+  "description": "Shared helpers for ERC1155 tokens.",
+  "license": "MIT",
+  "private": true,
+  "main": "index.ts"
+}

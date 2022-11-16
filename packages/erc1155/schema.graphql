@@ -1,0 +1,116 @@
+{{>enums}}
+
+enum Status {
+  Active
+  Inactive
+  Unknown # Default and fallback
+}
+
+type Approval @entity(immutable: true) {
+  id: Bytes!
+
+  blockNumber: Int!
+  blockTimestamp: Int!
+  operator: Bytes!
+  owner: User!
+
+  value: Boolean!
+}
+
+"Global config"
+type Config @entity {
+  "Singleton with ID `global`"
+  id: Bytes!
+
+  "Address for data on this subgraph"
+  address: Bytes!
+
+  "A list of tokens to ignore"
+  ignoredTokens: [Int!]!
+
+  "Last expires checked"
+  nextExpiresTimestamp: Int!
+
+  # Not derived because we need to loop through to check for expired
+  listings: [Listing!]!
+}
+
+type Daily @entity {
+  id: Bytes!
+
+  date: Int!
+
+  burns: Int!
+  mints: Int!
+  transfers: Int!
+  sinks: Int!
+
+  token: Token!
+}
+
+type Listing @entity {
+  # { Contract }-{ Token Id }-{ Wallet }
+  id: Bytes!
+
+  "Listed/updated amount"
+  amount: Int!
+
+  "Available amount in a user wallet"
+  available: UserToken!
+
+  expires: Int!
+  price: BigDecimal!
+  token: Token!
+  status: Status!
+  user: User!
+}
+
+{{>token}}
+
+type Transfer @entity(immutable: true) {
+  id: Bytes!
+
+  amount: Int!
+
+  blockNumber: Int!
+  blockTimestamp: Int!
+
+  operator: Bytes!
+  from: User!
+  to: User!
+
+  token: Token!
+}
+
+type User @entity {
+  # { Wallet }
+  id: Bytes!
+
+  daily: [UserDaily!]! @derivedFrom(field: "user")
+  tokens: [UserToken!]! @derivedFrom(field: "user")
+
+  # Not derived because we need to loop the ids
+  listings: [Listing!]!
+}
+
+type UserDaily @entity {
+  # { Wallet }-{ Date }
+  id: Bytes!
+
+  date: Int!
+  user: User!
+
+  amount: Int!
+  token: Token!
+}
+
+type UserToken @entity {
+  # { Contract }-{ Token Id }-{ Wallet }
+  id: Bytes!
+
+  "Amount in inventory"
+  amount: Int!
+
+  token: Token!
+  user: User!
+}

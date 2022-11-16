@@ -1,0 +1,5 @@
+subgraph:
+  - "packages/abis/src/1155.json"
+  - "packages/erc1155/**"
+  - "packages/helpers/**"
+  - "packages/trove/**"
