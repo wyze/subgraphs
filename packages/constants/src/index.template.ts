@@ -9,6 +9,8 @@ export const ASITERRA_NFT_HANDLER_ADDRESS = Address.fromString(
 export const ATLAS_MINE_ADDRESS = Address.fromString(
   "{{ atlas_mine_address }}"
 );
+export const BALANCER_CRYSTAL_ADDRESS = Address.fromString("{{ balancer_crystal_address }}");
+export const CONSUMABLE_ADDRESS = Address.fromString("{{ consumable_address }}");
 export const CRAFTING_ADDRESS = Address.fromString("{{ crafting_address }}");
 export const DEAD_ADDRESS = Address.fromString("{{ dead_address }}");
 export const KAMEJI_NFT_HANDLER_ADDRESS = Address.fromString(
