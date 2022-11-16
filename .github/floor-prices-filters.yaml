@@ -1,4 +1,0 @@
-subgraph:
-  - "packages/abis/src/1155.json"
-  - "packages/abis/src/Trove.json"
-  - "packages/helpers/**"
