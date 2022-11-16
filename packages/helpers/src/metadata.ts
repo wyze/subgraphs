@@ -1,3 +1,92 @@
+export function getBalancerCrystalName(tokenId: i32): string {
+  switch (tokenId) {
+    case 1:
+      return "Balancer Crystal";
+    default:
+      return "";
+  }
+}
+
+export function getConsumableName(tokenId: i32): string {
+  switch (tokenId) {
+    case 1:
+      return "Small Prism";
+    case 2:
+      return "Medium Prism";
+    case 3:
+      return "Large Prism";
+    case 4:
+      return "Small Extractor";
+    case 5:
+      return "Medium Extractor";
+    case 6:
+      return "Large Extractor";
+    case 7:
+      return "Harvester Part";
+    case 8:
+      return "Essence of Starlight";
+    case 9:
+      return "Prism Shards";
+    case 10:
+      return "Universal Lock";
+    case 11:
+      return "Azurite Dust";
+    case 12:
+      return "Essence of Honeycomb";
+    case 13:
+      return "Essence of Grin";
+    case 14:
+      return "Shrouded Tesseract";
+    default:
+      return "";
+  }
+}
+
+export function getConsumableSize(tokenId: i32): string {
+  switch (tokenId) {
+    case 1:
+    case 4:
+      return "Small";
+    case 2:
+    case 5:
+      return "Medium";
+    case 3:
+    case 6:
+      return "Large";
+    default:
+      return "";
+  }
+}
+
+export function getConsumableType(tokenId: i32): string {
+  switch (tokenId) {
+    case 1:
+    case 2:
+    case 3:
+      return "Prism";
+    case 4:
+    case 5:
+    case 6:
+      return "Extractor";
+    case 7:
+      return "HarvesterPart";
+    case 8:
+    case 12:
+    case 13:
+      return "Essence";
+    case 9:
+      return "Shards";
+    case 10:
+      return "Lock";
+    case 11:
+      return "Dust";
+    case 14:
+      return "Tesseract";
+    default:
+      return "Unknown";
+  }
+}
+
 export function getTreasureBoost(tokenId: i32): string {
   switch (tokenId) {
     case 39: // Ancient Relic x%
@@ -96,8 +185,8 @@ export function getTreasureCategory(tokenId: i32): string {
   }
 }
 
-export function getTreasureName(id: i32): string {
-  switch (id) {
+export function getTreasureName(tokenId: i32): string {
+  switch (tokenId) {
     case 39:
       return "Ancient Relic";
     case 46:

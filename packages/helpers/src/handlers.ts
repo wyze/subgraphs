@@ -1,31 +1,14 @@
-import {
-  Address,
-  BigInt,
-  Bytes,
-  Value,
-  ethereum,
-} from "@graphprotocol/graph-ts";
+import { Address, Bytes, Value, ethereum } from "@graphprotocol/graph-ts";
 
 import { Approval, Transfer } from "./entities";
-import { getToken } from "./models";
+import { getId } from "./ids";
 import { toTimestamp } from "./numbers";
-
-class TransferParams {
-  amount: Value;
-  from: Address;
-  operator: Address;
-  to: Address;
-  tokenId: BigInt | null;
-}
+import { TransferParams } from "./types";
 
 class ApprovalParams {
   operator: Address;
   owner: Address;
   value: Value;
-}
-
-function getId(event: ethereum.Event): Bytes {
-  return event.transaction.hash.concat(Bytes.fromI32(event.logIndex.toI32()));
 }
 
 export function handleApproval(
@@ -57,12 +40,6 @@ export function handleTransfer(
   transfer.from = params.from;
   transfer.operator = params.operator;
   transfer.to = params.to;
-
-  const tokenId = params.tokenId;
-
-  if (tokenId) {
-    transfer.token = getToken(event.address, tokenId.toI32()).id;
-  }
 
   transfer.save();
 }
