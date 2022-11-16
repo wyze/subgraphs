@@ -1,0 +1,14 @@
+type Token @entity(immutable: true) {
+  id: Bytes!
+
+  boost: BigDecimal!
+  category: Category!
+  image: String!
+  name: String!
+  tier: Int!
+
+  daily: [Daily!]! @derivedFrom(field: "token")
+  listings: [Listing!]! @derivedFrom(field: "token")
+  owners: [UserToken!]! @derivedFrom(field: "token")
+  transfers: [Transfer!]! @derivedFrom(field: "token")
+}
