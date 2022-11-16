@@ -1,0 +1,66 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - name: Balancer Crystals
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      address: "{{ balancer_crystal_address }}"
+      abi: ERC1155
+      startBlock: {{ balancer_crystal_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - Daily
+        - Token
+        - Transfer
+        - Listing
+        - User
+        - UserDaily
+      abis:
+        - name: ERC1155
+          file: {{{ abis }}}/1155.json
+      eventHandlers:
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: onApproval
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: onTransferBatch
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: onTransferSingle
+      file: ./src/mapping.ts
+  - name: Trove
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      address: "{{ trove_address }}"
+      abi: Trove
+      startBlock: {{ trove_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Collection
+        - Listing
+        - Token
+        - User
+        - UserToken
+      abis:
+        - name: Trove
+          file: {{{ abis }}}/Trove.json
+      eventHandlers:
+        - event: BidAccepted(address,address,address,uint256,uint64,uint128,address,uint8)
+          handler: onBidAccepted
+        - event: ItemCanceled(indexed address,indexed address,indexed uint256)
+          handler: onItemCanceled
+        - event: ItemListed(address,address,uint256,uint64,uint128,uint64,address)
+          handler: onItemListed
+        - event: ItemSold(address,address,address,uint256,uint64,uint128,address)
+          handler: onItemSold
+        - event: ItemUpdated(address,address,uint256,uint64,uint128,uint64,address)
+          handler: onItemUpdated
+      file: ./src/mapping.ts

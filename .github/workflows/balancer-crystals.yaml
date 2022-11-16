@@ -1,0 +1,14 @@
+name: Balancer Crystals Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy.yaml
+    with:
+      filters: .github/erc1155-filters.yaml
+      subgraph: balancer-crystals
+    secrets: inherit
