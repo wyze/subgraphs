@@ -10,8 +10,8 @@ import {
   toTimestamp,
 } from "@shared/helpers";
 
-import { Daily, User, UserDaily } from "./helpers/entities";
-import { Approval, Transfer } from "./helpers/events";
+import { Daily, User, UserDaily } from "./src/entities";
+import { Approval, Transfer } from "./src/events";
 
 class DailyParams {
   amount: BigDecimal;
@@ -52,7 +52,6 @@ export function onTransfer(event: Transfer): void {
     from,
     operator: operator ? operator : Address.zero(),
     to,
-    tokenId: null,
   });
 
   updateDaily(event, { amount, from, to });
@@ -92,10 +91,7 @@ function updateDaily(event: ethereum.Event, params: DailyParams): void {
   daily.save();
 }
 
-function updateUserDaily(
-  event: ethereum.Event,
-  params: UserDailyParams
-): void {
+function updateUserDaily(event: ethereum.Event, params: UserDailyParams): void {
   const timestamp = toTimestamp(event.block.timestamp);
   const address = params.address;
   const id = address.concat(Bytes.fromI32(timestamp.day));
