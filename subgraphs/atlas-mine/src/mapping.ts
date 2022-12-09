@@ -122,7 +122,7 @@ export function onStaked(event: Staked): void {
   const stakedToken = ensureStakedToken(
     userAddress,
     params.nft,
-    params.tokenId
+    params.tokenId.toI32()
   );
   stakedToken.amount += params.amount.toI32();
   stakedToken.save();
@@ -135,7 +135,7 @@ export function onUnstaked(event: Unstaked): void {
   const stakedToken = ensureStakedToken(
     userAddress,
     params.nft,
-    params.tokenId
+    params.tokenId.toI32()
   );
   stakedToken.amount -= params.amount.toI32();
 

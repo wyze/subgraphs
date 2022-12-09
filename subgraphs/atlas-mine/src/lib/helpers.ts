@@ -135,9 +135,9 @@ export function ensureReward(params: Harvest__Params): Reward {
 export function ensureStakedToken(
   user: Address,
   contract: Address,
-  tokenId: BigInt
+  tokenId: i32
 ): StakedToken {
-  const id = user.concat(contract).concat(Bytes.fromI32(tokenId.toI32()));
+  const id = user.concat(contract).concat(Bytes.fromI32(tokenId));
 
   let stakedToken = StakedToken.load(id);
 

@@ -110,7 +110,7 @@ type StakedToken @entity {
   contract: Bytes!
 
   "NFT token ID"
-  tokenId: BigInt!
+  tokenId: Int!
 
   "Quantity staked"
   amount: Int!
