@@ -54,6 +54,9 @@ type Daily @entity {
 type Deposit @entity(immutable: true) {
   id: Bytes!
 
+  "Sortable deposit ID"
+  depositId: String!
+
   "Amount of deposit"
   amount: BigDecimal!
 
@@ -96,6 +99,9 @@ type Reward @entity {
 "NFTs staked as boosts"
 type StakedToken @entity {
   id: Bytes!
+
+  "Sortable staked token ID"
+  stakedTokenId: String!
 
   "Staking user"
   user: User!

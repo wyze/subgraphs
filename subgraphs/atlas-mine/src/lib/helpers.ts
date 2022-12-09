@@ -103,8 +103,10 @@ export function ensureDaily(blockstamp: BigInt): Daily {
 }
 
 export function ensureDeposit(params: Deposit__Params): Deposit {
-  const deposit = new Deposit(getId(params.user, params.index));
+  const id = getId(params.user, params.index);
+  const deposit = new Deposit(id);
 
+  deposit.depositId = id.toHexString();
   deposit.amount = params.amount.divDecimal(ONE);
   deposit.lock = getLock(params.lock).name;
   deposit.reward = deposit.id;
@@ -141,6 +143,7 @@ export function ensureStakedToken(
 
   if (!stakedToken) {
     stakedToken = new StakedToken(id);
+    stakedToken.stakedTokenId = id.toHexString();
     stakedToken.user = ensureUser(user).id;
     stakedToken.contract = contract;
     stakedToken.tokenId = tokenId;
