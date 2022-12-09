@@ -1,0 +1,29 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - name: Smol Domains
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      address: "{{ smol_domains_address }}"
+      abi: SmolDomains
+      startBlock: {{ smol_domains_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: SmolDomains
+          file: {{{ abis }}}/SmolDomains.json
+      eventHandlers:
+        - event: DataChanged(indexed address)
+          handler: onDataChanged
+        - event: DefaultDomainChanged(indexed address,string)
+          handler: onDefaultDomainChanged
+        - event: DomainCreated(indexed address,indexed address,string)
+          handler: onDomainCreated
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: onTransfer
+      file: ./src/mapping.ts

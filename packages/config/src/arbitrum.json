@@ -167,5 +167,8 @@
   "trove_address": "0x09986b4e255b3c548041a30a2ee312fe176731c2",
   "trove_start_block": 14550185,
 
+  "smol_domains_address": "0xe0d972817e94c5ff9bdc49a63d8927a0ba833e4f",
+  "smol_domains_start_block": 10763697,
+
   "hourly_stat_interval_start_block": 6470000
 }

@@ -1,0 +1,35 @@
+# Data about the domain
+type Domain @entity {
+  "Stored as the name of the domain"
+  id: Bytes!
+
+  "Image for domain, if set"
+  image: String
+
+  "Name of domain, including .smol"
+  name: String!
+
+  "Token tied to this domain"
+  token: Token!
+}
+
+# Store token ID that is tied to the domain
+type Token @entity(immutable: true) {
+  "Token ID"
+  id: Bytes!
+
+  "Domain tied to this token"
+  domain: Domain!
+}
+
+# User to store domains and the default domain
+type User @entity {
+  "User's wallet"
+  id: Bytes!
+
+  "User's currently set default domain"
+  main: Domain
+
+  "All tokens owned by the user"
+  domains: [Token!]!
+}

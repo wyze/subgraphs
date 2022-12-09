@@ -4,3 +4,4 @@ node_modules
 subgraph.yaml
 /**/*/tests/.bin
 /subgraphs/*/schema.graphql
+!/subgraphs/smol-domains/schema.graphql
