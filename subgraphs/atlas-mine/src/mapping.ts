@@ -5,10 +5,10 @@ import { DAY, ONE } from "./lib/constants";
 import {
   ensureDaily,
   ensureDeposit,
+  ensureDepositUnlock,
   ensureReward,
   ensureUnlock,
   ensureUser,
-  ensureUserUnlock,
   ensureWithdrawal,
   getLock,
 } from "./lib/helpers";
@@ -20,7 +20,6 @@ export function onDeposit(event: Deposit): void {
 
   const daily = ensureDaily(timestamp);
   const deposit = ensureDeposit(params);
-  const unlock = ensureUnlock(timestamp, lock);
   const user = ensureUser(params.user);
 
   deposit.day = daily.id;
@@ -42,11 +41,10 @@ export function onDeposit(event: Deposit): void {
       unlock.amount = unlock.amount.plus(amount);
       unlock.save();
 
-      const userUnlock = ensureUserUnlock(user, deposit);
+      const depositUnlock = ensureDepositUnlock(user, deposit, unlock);
 
-      userUnlock.amount = userUnlock.amount.plus(amount);
-      userUnlock.unlock = unlock.id;
-      userUnlock.save();
+      depositUnlock.amount = amount;
+      depositUnlock.save();
 
       const daily = ensureDaily(blockstamp);
 
@@ -56,14 +54,15 @@ export function onDeposit(event: Deposit): void {
     }
   } else {
     const amount = params.amount.divDecimal(ONE);
+    const unlock = ensureUnlock(timestamp, lock);
 
     unlock.amount = unlock.amount.plus(amount);
+    unlock.save();
 
-    const userUnlock = ensureUserUnlock(user, deposit);
+    const depositUnlock = ensureDepositUnlock(user, deposit, unlock);
 
-    userUnlock.amount = userUnlock.amount.plus(amount);
-    userUnlock.unlock = unlock.id;
-    userUnlock.save();
+    depositUnlock.amount = amount;
+    depositUnlock.save();
 
     const daily = ensureDaily(timestamp.plus(BigInt.fromI32(lock.length)));
 
@@ -71,8 +70,6 @@ export function onDeposit(event: Deposit): void {
     daily.unlocked = daily.unlocked.plus(amount);
     daily.save();
   }
-
-  unlock.save();
 }
 
 export function onHarvest(event: Harvest): void {

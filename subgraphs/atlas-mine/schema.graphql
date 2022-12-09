@@ -66,14 +66,31 @@ type Deposit @entity(immutable: true) {
   "Reward for this deposit"
   reward: Reward
 
-  "The unlock(s) tied to this deposit"
-  unlocks: [UserUnlock!]! @derivedFrom(field: "deposit")
+  "The unlock tied to this deposit"
+  unlocks: [DepositUnlock!]! @derivedFrom(field: "deposit")
 
   "The user this deposit belongs to"
   user: User!
 
   "The withdawal for this deposit"
   withdrawal: Withdrawal
+}
+
+"Unlock tied to a deposit"
+type DepositUnlock @entity(immutable: true) {
+  id: Bytes!
+
+  "Amount unlocked per day"
+  amount: BigDecimal!
+
+  "Deposit tied to this user unlock"
+  deposit: Deposit!
+
+  "The unlock for this user"
+  unlock: Unlock!
+
+  "The user this unlock is for"
+  user: User!
 }
 
 "Reward for a deposit"
@@ -118,27 +135,10 @@ type User @entity(immutable: true) {
   rewards: [Reward!]! @derivedFrom(field: "user")
 
   "Unlocks for this user"
-  unlocks: [UserUnlock!]! @derivedFrom(field: "user")
+  unlocks: [DepositUnlock!]! @derivedFrom(field: "user")
 
   "Withdrawals for this user"
   withdrawals: [Withdrawal!]! @derivedFrom(field: "user")
-}
-
-"User unlocks"
-type UserUnlock @entity(immutable: true) {
-  id: Bytes!
-
-  "Amount the user has in this unlock"
-  amount: BigDecimal!
-
-  "Deposit tied to this user unlock"
-  deposit: Deposit!
-
-  "The unlock for this user"
-  unlock: Unlock!
-
-  "The user this unlock is for"
-  user: User!
 }
 
 "Withdrawals per deposit"

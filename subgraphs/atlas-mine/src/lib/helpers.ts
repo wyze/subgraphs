@@ -10,10 +10,10 @@ import {
 import {
   Daily,
   Deposit,
+  DepositUnlock,
   Reward,
   Unlock,
   User,
-  UserUnlock,
   Withdrawal,
 } from "../../generated/schema";
 import {
@@ -107,6 +107,21 @@ export function ensureDeposit(params: Deposit__Params): Deposit {
   return deposit;
 }
 
+export function ensureDepositUnlock(
+  user: User,
+  deposit: Deposit,
+  unlock: Unlock
+): DepositUnlock {
+  const id = user.id.concat(deposit.id).concat(unlock.id);
+  const depositUnlock = new DepositUnlock(id);
+
+  depositUnlock.deposit = deposit.id;
+  depositUnlock.unlock = unlock.id;
+  depositUnlock.user = user.id;
+
+  return depositUnlock;
+}
+
 export function ensureReward(params: Harvest__Params): Reward {
   const id = getId(params.user, params.index);
 
@@ -154,22 +169,6 @@ export function ensureUser(id: Address): User {
   }
 
   return user;
-}
-
-export function ensureUserUnlock(user: User, deposit: Deposit): UserUnlock {
-  const id = user.id.concat(deposit.id);
-
-  let userUnlock = UserUnlock.load(id);
-
-  if (!userUnlock) {
-    userUnlock = new UserUnlock(id);
-
-    userUnlock.amount = BigDecimal.zero();
-    userUnlock.deposit = deposit.id;
-    userUnlock.user = user.id;
-  }
-
-  return userUnlock;
 }
 
 export function ensureWithdrawal(params: Withdraw__Params): Withdrawal {
