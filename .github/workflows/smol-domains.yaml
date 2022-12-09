@@ -9,7 +9,7 @@ jobs:
   deploy:
     uses: ./.github/workflows/deploy.yaml
     with:
-      filters:
+      filters: |
         subgraph:
           - "packages/abis/src/SmolDomains.json"
       subgraph: smol-domains

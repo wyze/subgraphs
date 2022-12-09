@@ -9,7 +9,7 @@ jobs:
   deploy:
     uses: ./.github/workflows/deploy.yaml
     with:
-      filters:
+      filters: |
         subgraph:
           - "packages/abis/src/AtlasMine.json"
       subgraph: atlas-mine
