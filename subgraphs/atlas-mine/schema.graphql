@@ -54,6 +54,9 @@ type Daily @entity {
 type Deposit @entity(immutable: true) {
   id: Bytes!
 
+  "Sortable deposit ID"
+  depositId: String!
+
   "Amount of deposit"
   amount: BigDecimal!
 
@@ -110,6 +113,26 @@ type Reward @entity {
   user: User!
 }
 
+"NFTs staked as boosts"
+type StakedToken @entity {
+  id: Bytes!
+
+  "Sortable staked token ID"
+  stakedTokenId: String!
+
+  "Staking user"
+  user: User!
+
+  "NFT contract address"
+  contract: Bytes!
+
+  "NFT token ID"
+  tokenId: Int!
+
+  "Quantity staked"
+  amount: Int!
+}
+
 "Amount unlocked this day and lock"
 type Unlock @entity {
   id: Bytes!
@@ -133,6 +156,9 @@ type User @entity(immutable: true) {
 
   "Rewards for this user"
   rewards: [Reward!]! @derivedFrom(field: "user")
+
+  "Staked tokens for this user"
+  stakedTokens: [StakedToken!]! @derivedFrom(field: "user")
 
   "Unlocks for this user"
   unlocks: [DepositUnlock!]! @derivedFrom(field: "user")

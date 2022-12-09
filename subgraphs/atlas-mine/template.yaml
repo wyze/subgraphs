@@ -24,4 +24,8 @@ dataSources:
           handler: onHarvest
         - event: Withdraw(indexed address,indexed uint256,uint256)
           handler: onWithdraw
+        - event: Staked(address,uint256,uint256,uint256)
+          handler: onStaked
+        - event: Unstaked(address,uint256,uint256,uint256)
+          handler: onUnstaked
       file: ./src/mapping.ts
