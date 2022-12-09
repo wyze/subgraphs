@@ -1,16 +1,24 @@
-import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt, store } from "@graphprotocol/graph-ts";
 
-import { Deposit, Harvest, Withdraw } from "../generated/Atlas Mine/AtlasMine";
+import {
+  Deposit,
+  Harvest,
+  Staked,
+  Unstaked,
+  Withdraw,
+} from "../generated/Atlas Mine/AtlasMine";
 import { DAY, ONE } from "./lib/constants";
 import {
   ensureDaily,
   ensureDeposit,
   ensureReward,
+  ensureStakedToken,
   ensureUnlock,
   ensureUser,
   ensureUserUnlock,
   ensureWithdrawal,
   getLock,
+  getUserOrMultisigAddress,
 } from "./lib/helpers";
 
 export function onDeposit(event: Deposit): void {
@@ -105,4 +113,35 @@ export function onWithdraw(event: Withdraw): void {
   daily.withdrawalCounts += 1;
   daily.withdrawn = daily.withdrawn.plus(amount);
   daily.save();
+}
+
+export function onStaked(event: Staked): void {
+  const params = event.params;
+  const userAddress = getUserOrMultisigAddress(event);
+
+  const stakedToken = ensureStakedToken(
+    userAddress,
+    params.nft,
+    params.tokenId
+  );
+  stakedToken.amount += params.amount.toI32();
+  stakedToken.save();
+}
+
+export function onUnstaked(event: Unstaked): void {
+  const params = event.params;
+  const userAddress = getUserOrMultisigAddress(event);
+
+  const stakedToken = ensureStakedToken(
+    userAddress,
+    params.nft,
+    params.tokenId
+  );
+  stakedToken.amount -= params.amount.toI32();
+
+  if (stakedToken.amount > 0) {
+    stakedToken.save();
+  } else {
+    store.remove("StakedToken", stakedToken.id.toHexString());
+  }
 }

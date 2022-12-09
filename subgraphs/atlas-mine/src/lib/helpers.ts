@@ -1,4 +1,10 @@
-import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import {
+  Address,
+  BigDecimal,
+  BigInt,
+  Bytes,
+  ethereum,
+} from "@graphprotocol/graph-ts";
 
 import { toTimestamp } from "@shared/helpers";
 
@@ -11,6 +17,7 @@ import {
   Daily,
   Deposit,
   Reward,
+  StakedToken,
   Unlock,
   User,
   UserUnlock,
@@ -123,6 +130,27 @@ export function ensureReward(params: Harvest__Params): Reward {
   return reward;
 }
 
+export function ensureStakedToken(
+  user: Address,
+  contract: Address,
+  tokenId: BigInt
+): StakedToken {
+  const id = user.concat(contract).concat(Bytes.fromI32(tokenId.toI32()));
+
+  let stakedToken = StakedToken.load(id);
+
+  if (!stakedToken) {
+    stakedToken = new StakedToken(id);
+    stakedToken.user = ensureUser(user).id;
+    stakedToken.contract = contract;
+    stakedToken.tokenId = tokenId;
+    stakedToken.amount = 0;
+    stakedToken.save();
+  }
+
+  return stakedToken;
+}
+
 export function ensureUnlock(blockstamp: BigInt, lock: Lock): Unlock {
   const future = blockstamp.plus(BigInt.fromI32(lock.length));
   const timestamp = toTimestamp(future);
@@ -186,4 +214,12 @@ export function ensureWithdrawal(params: Withdraw__Params): Withdrawal {
   }
 
   return withdrawal;
+}
+
+export function getUserOrMultisigAddress(event: ethereum.Event): Address {
+  const transaction = event.transaction;
+  const to =
+    transaction.to === null ? Address.zero() : (transaction.to as Address);
+  const isMultisig = to.notEqual(event.address);
+  return isMultisig ? to : transaction.from;
 }
