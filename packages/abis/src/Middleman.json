@@ -1,0 +1,61 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "stream",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "rewardsPaid",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "rewardsPaidInTotal",
+        "type": "uint256"
+      }
+    ],
+    "name": "RewardsPaid",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "targetHarvester",
+        "type": "address"
+      }
+    ],
+    "name": "getHarvesterShares",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "allActiveHarvesters",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "harvesterShare",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalShare",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "targetIndex",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

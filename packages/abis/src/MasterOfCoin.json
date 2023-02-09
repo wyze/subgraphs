@@ -1,0 +1,46 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "stream",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "rewardsPaid",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "rewardsPaidInTotal",
+        "type": "uint256"
+      }
+    ],
+    "name": "RewardsPaid",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "stream",
+        "type": "address"
+      }
+    ],
+    "name": "getRatePerSecond",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "ratePerSecond",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

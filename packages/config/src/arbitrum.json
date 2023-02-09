@@ -45,6 +45,12 @@
   "treasure_start_block": 2416540,
   "treasure_fragment_address": "0x756E4F3bb69c47d492aBf2a52af320190c174c55",
   "treasure_fragment_start_block": 11370538,
+  "harvester_factory_address": "0xe59aec5f6f631ef380dd4e60d531ff3ae2985cfd",
+  "harvester_factory_start_block": 19852121,
+  "middleman_address": "0x3ea9ceaebdeb702fcbc576710084c464431584c8",
+  "middleman_start_block": 19852107,
+  "master_of_coin_address": "0x3563590e19d2b9216e7879d269a04ec67ed95a87",
+  "master_of_coin_start_block": 19852107,
 
   "asiterra_nft_handler_address": "0x2ef99434b0be1511ed2a1589dc987e48298e059e",
   "shinoba_nft_handler_address": "0x85f1bfd98e190b482d5348fd6c987ae3da7a4df6",

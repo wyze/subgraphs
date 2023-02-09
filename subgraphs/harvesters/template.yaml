@@ -1,0 +1,142 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - name: Harvester Factory
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      address: "{{ harvester_factory_address }}"
+      abi: HarvesterFactory
+      startBlock: {{ harvester_factory_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: HarvesterFactory
+          file: {{{ abis }}}/HarvesterFactory.json
+      eventHandlers:
+        - event: HarvesterDeployed(address,address)
+          handler: onHarvesterDeployed
+      file: ./src/mapping.ts
+templates:
+  - name: HarvesterConfig
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: Harvester
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: Harvester
+          file: {{{ abis }}}/Harvester.json
+      eventHandlers:
+        - event: TimelockOption((uint256,uint256,uint256,bool),uint256)
+          handler: onAddedTimelockOption
+        - event: TimelockOptionEnabled((uint256,uint256,uint256,bool),uint256)
+          handler: onEnabledTimelockOption
+        - event: TimelockOptionDisabled((uint256,uint256,uint256,bool),uint256)
+          handler: onDisabledTimelockOption
+      file: ./src/mapping.ts
+  - name: NftHandlerConfig
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: NftHandler
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: NftHandler
+          file: {{{ abis }}}/NftHandler.json
+      eventHandlers:
+        - event: NftConfigSet(indexed address,indexed uint256,(uint8,address))
+          handler: onNftConfigSet
+      file: ./src/mapping.ts
+  - name: ExtractorRules
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: ExtractorRules
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: ExtractorRules
+          file: {{{ abis }}}/ExtractorRules.json
+      eventHandlers:
+        - event: ExtractorReplaced(address,uint256,uint256)
+          handler: onExtractorReplaced
+        - event: ExtractorStaked(address,uint256,uint256,uint256)
+          handler: onExtractorStaked
+      file: ./src/mapping.ts
+  - name: Harvester
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: Harvester
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: Harvester
+          file: {{{ abis }}}/Harvester.json
+      eventHandlers:
+        - event: Deposit(indexed address,indexed uint256,uint256,uint256)
+          handler: onDeposit
+        - event: Harvest(indexed address,uint256)
+          handler: onHarvest
+        - event: Withdraw(indexed address,indexed uint256,uint256)
+          handler: onWithdraw
+      file: ./src/mapping.ts
+  - name: NftHandler
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: NftHandler
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: NftHandler
+          file: {{{ abis }}}/NftHandler.json
+      eventHandlers:
+        - event: Staked(indexed address,indexed address,uint256,uint256)
+          handler: onStaked
+        - event: Unstaked(indexed address,indexed address,uint256,uint256)
+          handler: onUnstaked
+      file: ./src/mapping.ts
+  - name: Magic
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: ERC20
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: ERC20
+          file: {{{ abis }}}/20.json
+        - name: MasterOfCoin
+          file: {{{ abis }}}/MasterOfCoin.json
+        - name: Middleman
+          file: {{{ abis }}}/Middleman.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: onTransfer
+      file: ./src/mapping.ts

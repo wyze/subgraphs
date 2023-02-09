@@ -1,0 +1,21 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "harvester",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nftHandler",
+        "type": "address"
+      }
+    ],
+    "name": "HarvesterDeployed",
+    "type": "event"
+  }
+]

@@ -1,0 +1,309 @@
+"Daily stats per harvester per timelock"
+type DailyTimelock @entity {
+  id: Bytes!
+
+  "Date of these stats"
+  date: Int!
+
+  "Deposit counts for the day"
+  depositCount: Int!
+
+  "Deposited amount for the day"
+  deposited: BigDecimal!
+
+  "Deposits for the day"
+  deposits: [Deposit!]! @derivedFrom(field: "day")
+
+  "Harvester tied to this stat"
+  harvester: Harvester!
+
+  "Lock tied to this stat"
+  timelock: Timelock!
+
+  "Unlock counts for the day"
+  unlockCounts: Int!
+
+  "Unlocked amount for the day"
+  unlocked: BigDecimal!
+
+  "Unlocks for the day"
+  unlocks: [Unlock!]! @derivedFrom(field: "day")
+
+  "Withdrawal counts for the day"
+  withdrawalCounts: Int!
+
+  "Withdrawals for the day"
+  withdrawals: [Withdrawal!]! @derivedFrom(field: "day")
+
+  "Withdrawn amount for the day"
+  withdrawn: BigDecimal!
+}
+
+"Daily stats per harvester"
+type DailyHarvester @entity {
+  id: Bytes!
+
+  "Date of these stats"
+  date: Int!
+
+  "Amount of large extractors deployed"
+  extractorLarge: Int!
+
+  "Amount of medium extractors deployed"
+  extractorMedium: Int!
+
+  "Amount of small extractors deployed"
+  extractorSmall: Int!
+
+  "Amount of legions staked"
+  stakedLegions: Int!
+
+  "Amount of treasures staked"
+  stakedTreasures: Int!
+
+  "Harvest counts for the day"
+  harvestCount: Int!
+
+  "Harvested amount for the day"
+  harvested: BigDecimal!
+
+  "Harvester tied to this stat"
+  harvester: Harvester!
+
+  "Harvests for the day"
+  harvests: [Reward!]! @derivedFrom(field: "day")
+}
+
+"Daily extractor stats per harvester"
+type DailyExtractor @entity {
+  id: Bytes!
+
+  "Date of these stats"
+  date: Int!
+
+  "Harvester tied to this stat"
+  harvester: Harvester!
+
+  "Amount of large deployed"
+  large: Int!
+
+  "Amount of medium deployed"
+  medium: Int!
+
+  "Amount of small deployed"
+  small: Int!
+
+  "Amount of seconds before the current expired"
+  surplus: Int!
+
+  "Amount of seconds before an expired was replaced"
+  uncovered: Int!
+}
+
+"Deposit event"
+type Deposit @entity(immutable: true) {
+  id: Bytes!
+
+  "Amount of deposit"
+  amount: BigDecimal!
+
+  "Day of deposit"
+  day: DailyTimelock!
+
+  "The lock period"
+  timelock: Timelock!
+
+  "Reward for this deposit"
+  reward: Reward
+
+  "The unlock tied to this deposit"
+  unlocks: [DepositUnlock!]! @derivedFrom(field: "deposit")
+
+  "The user this deposit belongs to"
+  user: User!
+}
+
+"Unlock tied to a deposit"
+type DepositUnlock @entity(immutable: true) {
+  id: Bytes!
+
+  "Amount unlocked per day"
+  amount: BigDecimal!
+
+  "Deposit tied to this user unlock"
+  deposit: Deposit!
+
+  "The unlock for this user"
+  unlock: Unlock!
+
+  "The user this unlock is for"
+  user: User!
+}
+
+"Emission snapshot entry"
+type Emission @entity(immutable: true) {
+  id: Bytes!
+
+  "Address of the mine"
+  address: Bytes!
+
+  "Day the snapshot happened in"
+  day: Int!
+
+  "Emissions per second mine has emitted"
+  emissionsPerSecond: BigDecimal!
+
+  "Share of emissions pool"
+  emissionsShare: BigDecimal!
+
+  "Mining power for mine"
+  miningPower: BigDecimal!
+
+  "Hour the snapshot happened in"
+  hour: Int!
+  
+  "Name of the mine"
+  name: String!
+}
+
+"Extractor staked"
+type Extractor @entity(immutable: true) {
+  id: Bytes!
+
+  "Boost from extractor"
+  boost: Int!
+
+  "Timestamp when extractor was deployed"
+  deployed: BigInt!
+
+  "When extractor is expired"
+  expires: BigInt!
+
+  "Harvester this was staked into"
+  harvester: Harvester!
+
+  "Spot id in the harvester"
+  spotId: Int!
+
+  "Determine the size of the extractor"
+  tokenId: Int!
+
+  "User who staked the extractor"
+  user: User!
+}
+
+"Harvester entity"
+type Harvester @entity(immutable: true) {
+  id: Bytes!
+
+  "Handler of staking nfts"
+  handler: Bytes!
+
+  "The harvester name"
+  name: String!
+}
+
+"Reward for a user"
+type Reward @entity {
+  id: Bytes!
+
+  "Amount claimed"
+  amount: BigDecimal!
+
+  "Day the latest reward was claimed"
+  day: DailyHarvester!
+
+  "User this reward belongs to"
+  user: User!
+}
+
+"NFTs staked as boosts"
+type StakedToken @entity {
+  id: Bytes!
+
+  "Amount staked"
+  amount: Int!
+
+  "NFT contract address"
+  contract: Bytes!
+
+  "Handler this was staked into"
+  handler: Bytes!
+
+  "NFT token ID"
+  tokenId: Int!
+
+  "Staking user"
+  user: User!
+}
+
+"Timelock entity"
+type Timelock @entity {
+  id: Bytes!
+
+  "Boost provided by this option"
+  boost: BigDecimal!
+
+  "Duration, in seconds, of this timelock"
+  duration: Int!
+
+  "Is lock option available?"
+  enabled: Boolean!
+
+  "Harvester this timelock is for"
+  harvester: Harvester!
+
+  "Duration, in seconds, of the vesting period for this timelock"
+  vesting: Int!
+}
+
+"Amount unlocked this day and timelock"
+type Unlock @entity {
+  id: Bytes!
+
+  "Amount unlocked"
+  amount: BigDecimal!
+
+  "Day of unlock"
+  day: DailyTimelock!
+
+  "The timelock"
+  timelock: Timelock!
+}
+
+"User record"
+type User @entity(immutable: true) {
+  id: Bytes!
+
+  "Deposits made by this user"
+  deposits: [Deposit!]! @derivedFrom(field: "user")
+
+  "Rewards for this user"
+  rewards: [Reward!]! @derivedFrom(field: "user")
+
+  "Staked tokens for this user"
+  stakedTokens: [StakedToken!]! @derivedFrom(field: "user")
+
+  "Unlocks for this user"
+  unlocks: [DepositUnlock!]! @derivedFrom(field: "user")
+
+  "Withdrawals for this user"
+  withdrawals: [Withdrawal!]! @derivedFrom(field: "user")
+}
+
+"Withdrawals per deposit"
+type Withdrawal @entity(immutable: true) {
+  id: Bytes!
+
+  "Amount withdrawn"
+  amount: BigDecimal!
+
+  "Deposit tied to this withdrawal"
+  deposit: Deposit!
+
+  "Day the withdrawal occurred"
+  day: DailyTimelock!
+
+  "User tied to this withdrawal"
+  user: User!
+}
