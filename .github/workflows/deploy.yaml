@@ -1,5 +1,7 @@
 name: Deploy Subgraph
 
+run-name: Deploy ${{ inputs.subgraph }} Subgraph
+
 on:
   workflow_dispatch:
     inputs:
