@@ -1,0 +1,87 @@
+enum Status {
+  Active
+  Inactive
+  Unknown # Default and fallback
+}
+
+"Daily claimable amount per wasteland"
+type DailyClaimable @entity(immutable: true) {
+  id: Bytes!
+
+  "Amount claimable by each wasteland"
+  amount: BigDecimal!
+
+  "Day for claimable amount"
+  day: Int!
+
+  "Total claimable across all wastelands"
+  total: BigDecimal!
+}
+
+"Claimed amount per wasteland per user"
+type Claimed @entity {
+  id: Bytes!
+
+  "Amount claimed"
+  amount: BigDecimal!
+
+  "Token claimed against"
+  token: Token!
+
+  "User claiming"
+  user: User!
+}
+
+"Global config"
+type Config @entity {
+  "Singleton with ID `global`"
+  id: Bytes!
+
+  "Address for data on this subgraph"
+  address: Bytes!
+
+  "A list of tokens to ignore"
+  ignoredTokens: [Int!]!
+
+  "Last expires checked"
+  nextExpiresTimestamp: Int!
+
+  # We need to loop through to check for expired
+  listings: [Listing!]!
+}
+
+"Trove listing"
+type Listing @entity {
+  id: Bytes!
+
+  "When the listing expires"
+  expires: Int!
+
+  "Price listed for"
+  price: BigDecimal!
+
+  "Token that is listed"
+  token: Token!
+
+  "Listing status"
+  status: Status!
+
+  "User that created the listing"
+  user: User!
+}
+
+"Token record"
+type Token @entity {
+  id: Bytes!
+
+  "Owner of token"
+  owner: User!
+
+  "Token Id"
+  tokenId: Int!
+}
+
+"User record"
+type User @entity(immutable: true) {
+  id: Bytes!
+}

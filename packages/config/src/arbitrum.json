@@ -176,5 +176,8 @@
   "smol_domains_address": "0xe0d972817e94c5ff9bdc49a63d8927a0ba833e4f",
   "smol_domains_start_block": 10763697,
 
+  "wastelands_address": "0xb8c465243b405a5908dc2a664535025b5ba5bac0",
+  "wastelands_start_block": 47577644,
+
   "hourly_stat_interval_start_block": 6470000
 }
