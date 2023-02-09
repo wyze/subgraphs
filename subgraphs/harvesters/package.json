@@ -7,8 +7,9 @@
     "codegen": "graph codegen",
     "create": "graph create --node $GRAPH_NODE_ENDPOINT harvesters",
     "deploy": "graph deploy harvesters --ipfs $GRAPH_IPFS_ENDPOINT --node $GRAPH_NODE_ENDPOINT --version-label v0.0.0",
-    "prepare": "mustache ../../node_modules/@shared/subgraph-config/src/arbitrum.json template.yaml > subgraph.yaml",
-    "prepare:mainnet": "mustache ../../node_modules/@shared/subgraph-config/src/mainnet.json template.yaml > subgraph.yaml",
+    "prepare": "run-s -l prepare:*",
+    "prepare:constants": "yarn --cwd ../../packages/constants prepare:arbitrum",
+    "prepare:subgraph": "mustache ../../node_modules/@shared/subgraph-config/src/arbitrum.json template.yaml > subgraph.yaml",
     "test": "exit 0 && graph test"
   }
 }
