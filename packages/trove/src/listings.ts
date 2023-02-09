@@ -35,9 +35,14 @@ export function onItemListedOrUpdated<T extends ListedParams>(params: T): void {
   }
 
   const listing = ensureListing(params.nft, params.tokenId, params.seller);
+  const expiration = params.expirationTime;
 
   listing.amount = params.quantity.toI32();
-  listing.expires = params.expirationTime.toI32();
+  listing.expires = (
+    expiration.toString().length > 10
+      ? expiration.div(BigInt.fromI32(1000))
+      : expiration
+  ).toI32();
   listing.price = params.pricePerItem.divDecimal(
     BigDecimal.fromString(`${1e18}`)
   );
@@ -52,13 +57,6 @@ export function onItemListedOrUpdated<T extends ListedParams>(params: T): void {
   if (!config.listings.includes(listing.id)) {
     config.listings = config.listings.concat([listing.id]);
     config.save();
-  }
-
-  const user = ensureUser(params.seller);
-
-  if (!user.listings.includes(listing.id)) {
-    user.listings = user.listings.concat([listing.id]);
-    user.save();
   }
 }
 
@@ -103,17 +101,11 @@ export function removeListing(nft: Address, listing: Listing): void {
   config.listings = remove(config.listings, listing.id);
   config.save();
 
-  const user = ensureUser(Address.fromBytes(listing.user));
-
-  user.listings = remove(user.listings, listing.id);
-  user.save();
-
   store.remove("Listing", listing.id.toHexString());
 }
 
 export function ensureListingsAreActive(event: ethereum.Event): void {
   const config = getConfig();
-  const listings = config.listings;
   const timestamp = event.block.timestamp.toI32();
 
   if (config.nextExpiresTimestamp > timestamp) {
@@ -122,6 +114,8 @@ export function ensureListingsAreActive(event: ethereum.Event): void {
 
   config.nextExpiresTimestamp = timestamp + 300; // Every 5 minutes
   config.save();
+
+  const listings = config.listings;
 
   for (let index = 0; index < listings.length; index++) {
     const listing = Listing.load(listings[index]);

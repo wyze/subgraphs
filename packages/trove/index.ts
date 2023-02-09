@@ -1,7 +1,20 @@
-import { BidAccepted, ItemCanceled, ItemListed, ItemSold, ItemUpdated } from "./src/events";
-import { ensureListingsAreActive, onBidAcceptedOrItemSold, onItemListedOrUpdated, removeListing } from "./src/listings";
+import {
+  BidAccepted,
+  ItemCanceled,
+  ItemListed,
+  ItemSold,
+  ItemUpdated,
+} from "./src/events";
+import {
+  ensureListingsAreActive,
+  onBidAcceptedOrItemSold,
+  onItemListedOrUpdated,
+  removeListing,
+} from "./src/listings";
 import { ensureListing } from "./src/models";
 import { isIgnoredToken } from "./src/token";
+
+export { ensureListing, removeListing };
 
 export function onBidAccepted(event: BidAccepted): void {
   onBidAcceptedOrItemSold(event.params);
