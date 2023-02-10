@@ -10,6 +10,7 @@ on:
         description: Select subgraph
         options:
           - harvesters
+          - smol-domains
           - wastelands
 
 jobs:
