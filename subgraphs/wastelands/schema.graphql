@@ -5,7 +5,7 @@ enum Status {
 }
 
 "Daily claimable amount per wasteland"
-type DailyClaimable @entity(immutable: true) {
+type DailyClaimable @entity {
   id: Bytes!
 
   "Amount claimable by each wasteland"

@@ -1,7 +1,9 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
+import { toTimestamp } from "@shared/helpers";
+
 import { MagicRewardsClaimed__Params } from "../../generated/Wastelands/Wastelands";
-import { Claimed, Token, User } from "../../generated/schema";
+import { Claimed, DailyClaimable, Token, User } from "../../generated/schema";
 
 export function ensureClaimed(params: MagicRewardsClaimed__Params): Claimed {
   const id = Bytes.empty();
@@ -17,6 +19,23 @@ export function ensureClaimed(params: MagicRewardsClaimed__Params): Claimed {
   }
 
   return claimed;
+}
+
+export function ensureDailyClaimable(blockstamp: BigInt): DailyClaimable {
+  const timestamp = toTimestamp(blockstamp).daystamp;
+  const id = Bytes.fromI32(timestamp);
+
+  let claimable = DailyClaimable.load(id);
+
+  if (!claimable) {
+    claimable = new DailyClaimable(id);
+
+    claimable.amount = BigDecimal.zero();
+    claimable.day = timestamp;
+    claimable.total = BigDecimal.zero();
+  }
+
+  return claimable;
 }
 
 export function ensureToken(biTokenId: BigInt): Token {
