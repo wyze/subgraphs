@@ -58,3 +58,30 @@ jobs:
       - name: Deploy
         if: inputs.environment == 'Production'
         run: yarn graph deploy ${{ inputs.subgraph }} --ipfs $GRAPH_IPFS_ENDPOINT --node $GRAPH_NODE_ENDPOINT --version-label v0.0.0
+  remove:
+    name: Remove pending ${{ inputs.subgraph }}
+    if: inputs.environment == 'Production'
+    needs: deploy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./subgraphs/${{ inputs.subgraph }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: Setup environment
+        uses: Firenza/secrets-to-env@v1.2.0
+        with:
+            secrets: ${{ toJSON(secrets) }}
+
+      - name: Remove
+        run: yarn graph remove --node $GRAPH_NODE_ENDPOINT ${{ inputs.subgraph }}-pending
