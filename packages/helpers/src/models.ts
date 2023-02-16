@@ -60,7 +60,6 @@ export function ensureUser(wallet: Address): User {
   if (!user) {
     user = new User(wallet);
 
-    user.listings = [];
     user.save();
   }
 
@@ -106,10 +105,13 @@ export function ensureTransfer(
 }
 
 export function getConfig(): Config {
-  const config = Config.load();
+  let config = Config.load();
 
   if (!config) {
-    throw new Error("~> getConfig: NO_CONFIG_FOUND");
+    config = new Config();
+
+    config.address = Address.zero();
+    config.nextExpiresTimestamp = i32.MAX_VALUE;
   }
 
   return config;
