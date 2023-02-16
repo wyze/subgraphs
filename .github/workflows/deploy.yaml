@@ -5,9 +5,14 @@ run-name: Deploy ${{ inputs.subgraph }} Subgraph
 on:
   workflow_dispatch:
     inputs:
+      environment:
+        description: Select environment
+        type: environment
+        required: true 
       subgraph:
         type: choice
         description: Select subgraph
+        required: true
         options:
           - harvesters
           - smol-domains
@@ -46,5 +51,10 @@ jobs:
       - name: Create
         run: yarn graph create --node $GRAPH_NODE_ENDPOINT ${{ inputs.subgraph }}-pending
 
-      - name: Deploy
+      - name: Deploy Pending
+        if: inputs.environment == 'Development'
         run: yarn graph deploy ${{ inputs.subgraph }}-pending --ipfs $GRAPH_IPFS_ENDPOINT --node $GRAPH_NODE_ENDPOINT --version-label v0.0.0
+
+      - name: Deploy
+        if: inputs.environment == 'Production'
+        run: yarn graph deploy ${{ inputs.subgraph }} --ipfs $GRAPH_IPFS_ENDPOINT --node $GRAPH_NODE_ENDPOINT --version-label v0.0.0
