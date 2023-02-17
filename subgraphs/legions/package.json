@@ -1,0 +1,16 @@
+{
+  "name": "legions",
+  "version": "1.0.0",
+  "description": "A subgraph for Legions.",
+  "license": "MIT",
+  "scripts": {
+    "codegen": "graph codegen",
+    "create": "graph create --node $GRAPH_NODE_ENDPOINT legions",
+    "deploy": "graph deploy legions --ipfs $GRAPH_IPFS_ENDPOINT --node $GRAPH_NODE_ENDPOINT --version-label v0.0.0",
+    "prepare": "run-s -l prepare:*",
+    "prepare:constants": "yarn --cwd ../../packages/constants prepare:arbitrum",
+    "prepare:schema": "echo {} | mustache - ../../packages/erc721/schema.graphql > schema.graphql",
+    "prepare:subgraph": "mustache ../../node_modules/@shared/subgraph-config/src/arbitrum.json template.yaml > subgraph.yaml",
+    "test": "exit 0 && graph test"
+  }
+}

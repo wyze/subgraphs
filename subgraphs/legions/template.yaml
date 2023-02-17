@@ -1,0 +1,71 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - name: Harvester Factory
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      address: "{{ harvester_factory_address }}"
+      abi: HarvesterFactory
+      startBlock: {{ harvester_factory_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: HarvesterFactory
+          file: {{{ abis }}}/HarvesterFactory.json
+      eventHandlers:
+        - event: HarvesterDeployed(address,address)
+          handler: onHarvesterDeployed
+      file: ./src/mapping.ts
+  - name: Legions
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      address: "{{ legion_address }}"
+      abi: ERC721
+      startBlock: {{ legion_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: ERC721
+          file: {{{ abis }}}/721.json
+      eventHandlers:
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: onApproval
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: onTransfer
+      file: ./src/mapping.ts
+  - name: Trove
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      address: "{{ trove_address }}"
+      abi: Trove
+      startBlock: {{ trove_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: Trove
+          file: {{{ abis }}}/Trove.json
+      eventHandlers:
+        - event: BidAccepted(address,address,address,uint256,uint64,uint128,address,uint8)
+          handler: onBidAccepted
+        - event: ItemCanceled(indexed address,indexed address,indexed uint256)
+          handler: onItemCanceled
+        - event: ItemListed(address,address,uint256,uint64,uint128,uint64,address)
+          handler: onItemListed
+        - event: ItemSold(address,address,address,uint256,uint64,uint128,address)
+          handler: onItemSold
+        - event: ItemUpdated(address,address,uint256,uint64,uint128,uint64,address)
+          handler: onItemUpdated
+      file: ./src/mapping.ts

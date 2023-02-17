@@ -15,6 +15,7 @@ on:
         required: true
         options:
           - harvesters
+          - legions
           - smol-domains
           - wastelands
 

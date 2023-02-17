@@ -1,0 +1,8 @@
+{
+  "name": "@shared/erc721",
+  "version": "1.0.0",
+  "description": "Shared helpers for ERC721 tokens.",
+  "license": "MIT",
+  "private": true,
+  "main": "index.ts"
+}
