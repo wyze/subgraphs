@@ -1,0 +1,8 @@
+{
+  "name": "@shared/harvesters",
+  "version": "1.0.0",
+  "description": "Shared helpers for Harvesters.",
+  "license": "MIT",
+  "private": true,
+  "main": "index.ts"
+}
