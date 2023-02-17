@@ -51,6 +51,8 @@
   "middleman_start_block": 19852107,
   "master_of_coin_address": "0x3563590e19d2b9216e7879d269a04ec67ed95a87",
   "master_of_coin_start_block": 19852107,
+  "corruption_crypts_address": "0x447c73f3ee46050d618fd956c1641274860b6c74",
+  "corruption_crypts_start_block": 60119196,
 
   "asiterra_nft_handler_address": "0x2ef99434b0be1511ed2a1589dc987e48298e059e",
   "shinoba_nft_handler_address": "0x85f1bfd98e190b482d5348fd6c987ae3da7a4df6",

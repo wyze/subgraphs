@@ -16,6 +16,9 @@ export const BURN_ADDRESS = Address.fromString("{{ burner_address }}");
 export const CONSUMABLE_ADDRESS = Address.fromString(
   "{{ consumable_address }}"
 );
+export const CORRUPTION_CRYPTS_ADDRESS = Address.fromString(
+  "{{ corruption_crypts_address }}"
+);
 export const CRAFTING_ADDRESS = Address.fromString("{{ crafting_address }}");
 export const DEAD_ADDRESS = Address.fromString("{{ dead_address }}");
 export const KAMEJI_NFT_HANDLER_ADDRESS = Address.fromString(
@@ -38,6 +41,7 @@ export const SEED_EVOLUTION_ADDRESS = Address.fromString(
 export const SMOLOVE_FORGE_ADDRESS = Address.fromString(
   "{{ smolove_forge_address }}"
 );
+export const SUMMONING_ADDRESS = Address.fromString("{{ summoning_address }}");
 export const TREASURE_ADDRESS = Address.fromString("{{ treasure_address }}");
 export const TREASURY_ADDRESS = Address.fromString("{{ treasury_address }}");
 export const TROVE_ADDRESS = Address.fromString("{{ trove_address }}");
