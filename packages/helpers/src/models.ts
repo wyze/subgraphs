@@ -178,7 +178,7 @@ export function getToken(address: Address, tokenId: i32): Token {
     case address.equals(TREASURE_ADDRESS):
       return getTreasureToken(tokenId);
     default:
-      return new Token(-1);
+      return new Token(tokenId);
   }
 }
 
