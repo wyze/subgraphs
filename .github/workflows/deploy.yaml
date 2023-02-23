@@ -17,6 +17,7 @@ on:
           - harvesters
           - legions
           - smol-domains
+          - treasure-tags
           - wastelands
 
 jobs:
