@@ -1,0 +1,44 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - name: Controller
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      address: "{{ treasure_tag_controller_address }}"
+      abi: TreasureTags
+      startBlock: {{ treasure_tag_controller_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: TreasureTags
+          file: {{{ abis }}}/TreasureTags.json
+      eventHandlers:
+        - event: NameRegistered(string,string,indexed address)
+          handler: onNameRegistered
+      file: ./src/mapping.ts
+  - name: Tags
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      address: "{{ treasure_tag_address }}"
+      abi: TreasureTags
+      startBlock: {{ treasure_tag_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: TreasureTags
+          file: {{{ abis }}}/TreasureTags.json
+      eventHandlers:
+        - event: NameRemoved(indexed uint256,indexed address)
+          handler: onNameRemoved
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: onTransfer
+      file: ./src/mapping.ts

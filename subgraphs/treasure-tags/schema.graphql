@@ -1,0 +1,23 @@
+"Data about the domain"
+type Domain @entity {
+  id: Bytes!
+
+  "Discriminant for domain"
+  discriminant: String!
+
+  "Name of domain"
+  name: String!
+}
+
+"Store token ID that is tied to the domain"
+type Token @entity {
+  id: Bytes!
+
+  "Owner of the token"
+  owner: User!
+}
+
+"User record"
+type User @entity(immutable: true) {
+  id: Bytes!
+}
