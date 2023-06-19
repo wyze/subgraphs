@@ -50,14 +50,11 @@ import {
   DAY,
   EXTRACTOR_BOOSTS,
   EXTRACTOR_LIFETIME,
-  EXTRACTOR_SIZE,
   EXTRACTOR_TOKEN_IDS,
   NAMES,
   ONE,
-  ONE_HOUR,
 } from "./lib/constants";
 import {
-  ensureDailyExtractor,
   ensureDailyHarvester,
   ensureDailyTimelock,
   ensureDeposit,
