@@ -2,22 +2,24 @@ import {
   Address,
   BigInt,
   Bytes,
+  Entity,
   Value,
   ethereum,
+  store,
 } from "@graphprotocol/graph-ts";
 
-import { DEAD_ADDRESS } from "@shared/constants";
 import {
   Direction,
   TransferParams,
   createConfig,
-  ensureTransfer,
+  ensureStakedToken,
   ensureUser,
   ensureUserToken,
   getConfig,
   getToken,
   handleApproval,
   isSink,
+  isStake,
   isZero,
   toI32Value,
   toTimestamp,
@@ -56,35 +58,57 @@ function onTransfer(
   params: TransferParams,
   tokenId: BigInt
 ): void {
+  const address = event.address;
   const amount = params.amount.toI32();
   const from = params.from;
   const operator = params.operator;
   const to = params.to;
 
-  createConfig(event.address);
+  createConfig(address);
 
   if (getConfig().ignoredTokens.includes(tokenId.toI32())) {
     return;
   }
 
-  if (!isZero(params.from)) {
-    const userToken = ensureUserToken(event.address, tokenId, from);
+  const fromUserToken = ensureUserToken(address, tokenId, from);
 
-    userToken.amount -= amount;
-    userToken.save();
+  fromUserToken.amount -= amount;
+  fromUserToken.save();
+
+  if (fromUserToken.amount < 1) {
+    store.remove("UserToken", fromUserToken.id.toHexString());
   }
 
-  if (!isZero(params.to) && params.to.notEqual(DEAD_ADDRESS)) {
-    const userToken = ensureUserToken(event.address, tokenId, to);
+  const toUserToken = ensureUserToken(address, tokenId, to);
 
-    userToken.amount += amount;
-    userToken.save();
+  toUserToken.amount += amount;
+  toUserToken.save();
+
+  if (isStake(to)) {
+    const token = changetype<Entity>(
+      store.get("Token", Bytes.fromI32(tokenId.toI32()).toHexString())
+    );
+
+    // Extractors aren't staked, they are burned.
+    if (!token.getString("name").includes("Extractor")) {
+      const stakedToken = ensureStakedToken(address, tokenId, from, to);
+
+      stakedToken.amount += amount;
+      stakedToken.save();
+    }
   }
 
-  const transfer = ensureTransfer(event, params);
+  if (isStake(from)) {
+    const stakedToken = ensureStakedToken(address, tokenId, to, from);
 
-  transfer.token = getToken(event.address, tokenId.toI32()).id;
-  transfer.save();
+    stakedToken.amount -= amount;
+    stakedToken.save();
+
+    if (stakedToken.amount < 1) {
+      store.remove("StakedToken", stakedToken.id.toHexString());
+    }
+  }
+
 
   updateDaily(event, { amount, from, operator, to, tokenId });
 
@@ -113,7 +137,11 @@ export function onTransferBatch(event: TransferBatch): void {
     const operator = params.operator;
     const to = params.to;
 
-    onTransfer(event, { amount: toI32Value(amount), from, operator, to }, id);
+    onTransfer(
+      event,
+      new TransferParams(toI32Value(amount), from, operator, to),
+      id
+    );
   }
 }
 
@@ -128,7 +156,7 @@ export function onTransferSingle(event: TransferSingle): void {
 
   onTransfer(
     event,
-    { amount: toI32Value(amount), from, operator, to },
+    new TransferParams(toI32Value(amount), from, operator, to),
     tokenId
   );
 }

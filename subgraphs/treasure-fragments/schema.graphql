@@ -1,18 +1,10 @@
-{{>enums}}
-
-enum Status {
-  Active
-  Inactive
-  Unknown # Default and fallback
-}
-
-type Approval @entity(immutable: true) {
-  id: Bytes!
-
-  operator: Bytes!
-  owner: User!
-
-  value: Boolean!
+enum Category {
+  Alchemy
+  Arcana
+  Brewing
+  Enchanting
+  Leatherworking
+  Smithing
 }
 
 "Global config"
@@ -28,9 +20,6 @@ type Config @entity {
 
   "Last expires checked"
   nextExpiresTimestamp: Int!
-
-  # Not derived because we need to loop through to check for expired
-  listings: [Listing!]!
 }
 
 type Daily @entity {
@@ -46,53 +35,29 @@ type Daily @entity {
   token: Token!
 }
 
-type Listing @entity {
-  id: Bytes!
-
-  "Listed/updated amount"
-  amount: Int!
-
-  "Available amount in a user wallet"
-  available: UserToken!
-
-  expires: Int!
-  price: BigDecimal!
-  token: Token!
-  status: Status!
-  user: User!
-}
-
 "Staking location"
 type Stake @entity(immutable: true) {
   id: Bytes!
 }
 
-type StakedToken @entity {
+type Token @entity(immutable: true) {
   id: Bytes!
 
-  "Amount staked"
-  amount: Int!
+  categories: [Category!]!
+  image: String!
+  name: String!
+  tier: Int!
+  tokenId: Int!
 
-  "Sink location"
-  sink: Bytes!
-
-  "Token staked"
-  token: Token!
-
-  "User that staked the token"
-  user: User!
+  daily: [Daily!]! @derivedFrom(field: "token")
+  owners: [UserToken!]! @derivedFrom(field: "token")
 }
-
-{{>token}}
 
 type User @entity {
   id: Bytes!
 
   daily: [UserDaily!]! @derivedFrom(field: "user")
   tokens: [UserToken!]! @derivedFrom(field: "user")
-
-  # Not derived because we need to loop the ids
-  listings: [Listing!]!
 }
 
 type UserDaily @entity {

@@ -12,15 +12,26 @@ import {
   BALANCER_CRYSTAL_ADDRESS,
   CONSUMABLE_ADDRESS,
   TREASURE_ADDRESS,
+  TREASURE_FRAGMENT_ADDRESS,
 } from "@shared/constants";
 
-import { Config, Token, Transfer, User, UserToken } from "./entities";
+import {
+  Config,
+  StakedToken,
+  Token,
+  Transfer,
+  User,
+  UserToken,
+} from "./entities";
 import { getId } from "./ids";
 import {
   getBalancerCrystalName,
   getConsumableName,
   getConsumableSize,
   getConsumableType,
+  getFragmentCategories,
+  getFragmentName,
+  getFragmentTier,
   getTreasureBoost,
   getTreasureCategory,
   getTreasureName,
@@ -52,6 +63,29 @@ export function createConfig(address: Address): void {
 
     config.save();
   }
+}
+
+export function ensureStakedToken(
+  contract: Address,
+  tokenId: BigInt,
+  user: Address,
+  sink: Address
+): StakedToken {
+  const tokenEntityId = sink.concat(contract).concat(toBigIntBytes(tokenId));
+  const id = tokenEntityId.concat(user);
+
+  let stakedToken = StakedToken.load(id);
+
+  if (!stakedToken) {
+    stakedToken = new StakedToken(id);
+
+    stakedToken.amount = 0;
+    stakedToken.sink = sink;
+    stakedToken.token = getToken(contract, tokenId.toI32()).id;
+    stakedToken.user = ensureUser(user).id;
+  }
+
+  return stakedToken;
 }
 
 export function ensureUser(wallet: Address): User {
@@ -169,12 +203,42 @@ function getConsumableToken(tokenId: i32): Token {
   return token;
 }
 
+function getFragmentToken(tokenId: i32): Token {
+  const token = new Token(tokenId);
+
+  if (exists("Token", token.id.toHexString())) {
+    return token;
+  }
+
+  // Set specific token information
+  token.set(
+    "categories",
+    Value.fromStringArray(getFragmentCategories(tokenId))
+  );
+  token.set(
+    "image",
+    Value.fromString(
+      `ipfs://QmUv5UT7X9qahf8bqcqZjX7TKqrJeMyRX3kxjVowz2WkRm/${tokenId}.jpg`
+    )
+  );
+  token.set("name", Value.fromString(getFragmentName(tokenId)));
+  token.set("tier", Value.fromI32(getFragmentTier(tokenId)));
+  token.set("tokenId", Value.fromI32(tokenId));
+
+  // Save changes
+  token.save();
+
+  return token;
+}
+
 export function getToken(address: Address, tokenId: i32): Token {
   switch (true) {
     case address.equals(BALANCER_CRYSTAL_ADDRESS):
       return getBalancerCrystalToken(tokenId);
     case address.equals(CONSUMABLE_ADDRESS):
       return getConsumableToken(tokenId);
+    case address.equals(TREASURE_FRAGMENT_ADDRESS):
+      return getFragmentToken(tokenId);
     case address.equals(TREASURE_ADDRESS):
       return getTreasureToken(tokenId);
     default:

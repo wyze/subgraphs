@@ -6,8 +6,10 @@ export enum Direction {
 }
 
 export class TransferParams {
-  amount: Value;
-  from: Address;
-  operator: Address;
-  to: Address;
+  constructor(
+    public amount: Value,
+    public from: Address,
+    public operator: Address,
+    public to: Address
+  ) {}
 }
