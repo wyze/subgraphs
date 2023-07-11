@@ -1,19 +1,7 @@
-import {
-  Address,
-  BigDecimal,
-  Bytes,
-  Value,
-  ethereum,
-} from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, Bytes, ethereum } from "@graphprotocol/graph-ts";
 
 import { USDC_ADDRESS } from "@shared/constants";
-import {
-  Direction,
-  TransferParams,
-  handleTransfer,
-  isZero,
-  toTimestamp,
-} from "@shared/helpers";
+import { Direction, isZero, toTimestamp } from "@shared/helpers";
 
 import { User, UserDaily } from "./src/entities";
 import { Transfer } from "./src/events";
@@ -24,48 +12,16 @@ class UserDailyParams {
   direction: Direction;
 }
 
-function ensureUser(id: Address): void {
-  if (isZero(id)) {
-    return;
-  }
-
-  if (!User.load(id)) {
-    const user = new User(id);
-
-    user.balance = BigDecimal.zero();
-    user.received = BigDecimal.zero();
-    user.receivedCount = 0;
-    user.sent = BigDecimal.zero();
-    user.sentCount = 0;
-
-    user.save();
-  }
-}
-
 function getDivisor(address: Address): BigDecimal {
   return BigDecimal.fromString(`${address.equals(USDC_ADDRESS) ? 1e6 : 1e18}`);
 }
 
 export function onTransfer(event: Transfer): void {
   const params = event.params;
-  const operator = event.transaction.to;
 
   const amount = params.amount.divDecimal(getDivisor(event.address));
   const from = params.from;
   const to = params.to;
-
-  handleTransfer(
-    event,
-    new TransferParams(
-      Value.fromBigDecimal(amount),
-      from,
-      operator ? operator : Address.zero(),
-      to
-    )
-  );
-
-  ensureUser(from);
-  ensureUser(to);
 
   updateUserDaily(event, { address: from, amount, direction: Direction.Out });
   updateUserDaily(event, { address: to, amount, direction: Direction.In });
