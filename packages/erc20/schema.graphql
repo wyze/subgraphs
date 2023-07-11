@@ -20,7 +20,6 @@ type User @entity {
   sent: BigDecimal!
   sentCount: Int!
 
-  approvals: [Approval!]! @derivedFrom(field: "owner")
   daily: [UserDaily!]! @derivedFrom(field: "user")
   transfersIn: [Transfer!]! @derivedFrom(field: "to")
   transfersOut: [Transfer!]! @derivedFrom(field: "from")
