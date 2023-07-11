@@ -30,7 +30,15 @@ function ensureUser(id: Address): void {
   }
 
   if (!User.load(id)) {
-    new User(id).save();
+    const user = new User(id);
+
+    user.balance = BigDecimal.zero();
+    user.received = BigDecimal.zero();
+    user.receivedCount = 0;
+    user.sent = BigDecimal.zero();
+    user.sentCount = 0;
+
+    user.save();
   }
 }
 
