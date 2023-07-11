@@ -1,11 +1,17 @@
-import { Address, BigDecimal, Bytes, ethereum } from "@graphprotocol/graph-ts";
+import {
+  Address,
+  BigDecimal,
+  Bytes,
+  Value,
+  ethereum,
+} from "@graphprotocol/graph-ts";
 
 import { USDC_ADDRESS } from "@shared/constants";
 import {
   Direction,
+  TransferParams,
   handleTransfer,
   isZero,
-  toBigDecimal,
   toTimestamp,
 } from "@shared/helpers";
 
@@ -40,12 +46,15 @@ export function onTransfer(event: Transfer): void {
   const from = params.from;
   const to = params.to;
 
-  handleTransfer(event, {
-    amount: toBigDecimal(amount),
-    from,
-    operator: operator ? operator : Address.zero(),
-    to,
-  });
+  handleTransfer(
+    event,
+    new TransferParams(
+      Value.fromBigDecimal(amount),
+      from,
+      operator ? operator : Address.zero(),
+      to
+    )
+  );
 
   ensureUser(from);
   ensureUser(to);
