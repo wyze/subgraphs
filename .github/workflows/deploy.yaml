@@ -15,6 +15,7 @@ on:
         required: true
         options:
           - harvesters
+          - magic
           - legions
           - smol-domains
           - treasure-fragments

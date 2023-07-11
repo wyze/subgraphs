@@ -3,21 +3,14 @@ import { Address, BigDecimal, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import { USDC_ADDRESS } from "@shared/constants";
 import {
   Direction,
-  handleApproval,
   handleTransfer,
   isZero,
   toBigDecimal,
   toTimestamp,
 } from "@shared/helpers";
 
-import { Daily, User, UserDaily } from "./src/entities";
-import { Approval, Transfer } from "./src/events";
-
-class DailyParams {
-  amount: BigDecimal;
-  from: Address;
-  to: Address;
-}
+import { User, UserDaily } from "./src/entities";
+import { Transfer } from "./src/events";
 
 class UserDailyParams {
   amount: BigDecimal;
@@ -25,18 +18,18 @@ class UserDailyParams {
   direction: Direction;
 }
 
-function getDivisor(address: Address): BigDecimal {
-  return BigDecimal.fromString(`${address.equals(USDC_ADDRESS) ? 1e6 : 1e18}`);
+function ensureUser(id: Address): void {
+  if (isZero(id)) {
+    return;
+  }
+
+  if (!User.load(id)) {
+    new User(id).save();
+  }
 }
 
-export function onApproval(event: Approval): void {
-  const params = event.params;
-
-  handleApproval(event, {
-    operator: params.operator,
-    owner: params.owner,
-    value: toBigDecimal(params.value.divDecimal(getDivisor(event.address))),
-  });
+function getDivisor(address: Address): BigDecimal {
+  return BigDecimal.fromString(`${address.equals(USDC_ADDRESS) ? 1e6 : 1e18}`);
 }
 
 export function onTransfer(event: Transfer): void {
@@ -54,41 +47,11 @@ export function onTransfer(event: Transfer): void {
     to,
   });
 
-  updateDaily(event, { amount, from, to });
+  ensureUser(from);
+  ensureUser(to);
+
   updateUserDaily(event, { address: from, amount, direction: Direction.Out });
   updateUserDaily(event, { address: to, amount, direction: Direction.In });
-}
-
-function updateDaily(event: ethereum.Event, params: DailyParams): void {
-  const timestamp = toTimestamp(event.block.timestamp);
-  const id = Bytes.fromI32(timestamp.day);
-  const isBurn = isZero(params.to);
-  const isMint = isZero(params.from);
-
-  let daily = Daily.load(id);
-
-  if (!daily) {
-    daily = new Daily(id);
-
-    daily.date = timestamp.daystamp;
-
-    daily.burned = BigDecimal.zero();
-    daily.burns = 0;
-    daily.minted = BigDecimal.zero();
-    daily.mints = 0;
-    daily.transferred = BigDecimal.zero();
-    daily.transfers = 0;
-  }
-
-  // Stats
-  daily.burned = isBurn ? daily.burned.plus(params.amount) : daily.burned;
-  daily.burns += isBurn ? 1 : 0;
-  daily.minted = isMint ? daily.minted.plus(params.amount) : daily.minted;
-  daily.mints += isMint ? 1 : 0;
-  daily.transferred = daily.transferred.plus(params.amount);
-  daily.transfers += 1;
-
-  daily.save();
 }
 
 function updateUserDaily(event: ethereum.Event, params: UserDailyParams): void {
