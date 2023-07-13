@@ -31,3 +31,4 @@ NAMES.set("0x2b1de6d22e6cb9178b3ecbcb7f20b62fcce925d4", "Shinoba");
 NAMES.set("0x70a75ac9537f6cdac553f82b6e39484acc521067", "Afarit");
 NAMES.set("0x3fbfcdc02f649d5875bc9f97281b7ef5a7a9c491", "Lupus Magus");
 NAMES.set("0x587dc30014e10b56907237d4880a9bf8b9518150", "Emerion");
+NAMES.set("0x25d6a1e968bdbebf444997286de7137df1490328", "Thundermane");
