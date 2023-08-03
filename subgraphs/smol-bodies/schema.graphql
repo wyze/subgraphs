@@ -1,0 +1,68 @@
+enum Status {
+  Active
+  Inactive
+  Unknown # Default and fallback
+}
+
+"Global config"
+type Config @entity {
+  "Singleton with ID `global`"
+  id: Bytes!
+
+  "Address for data on this subgraph"
+  address: Bytes!
+
+  "A list of tokens to ignore"
+  ignoredTokens: [Int!]!
+
+  "Last expires checked"
+  nextExpiresTimestamp: Int!
+
+  # We need to loop through to check for expired
+  "Listings for this collection"
+  listings: [Listing!]!
+}
+
+"Trove listing"
+type Listing @entity {
+  id: Bytes!
+
+  "When the listing expires"
+  expires: Int!
+
+  "Price listed for"
+  price: BigDecimal!
+
+  "Token that is listed"
+  token: Token!
+
+  "Listing status"
+  status: Status!
+
+  "User that created the listing"
+  user: User!
+}
+
+"Staking location"
+type Stake @entity(immutable: true) {
+  id: Bytes!
+}
+
+"Token record"
+type Token @entity {
+  id: Bytes!
+
+  "Location of token, if staked"
+  location: Stake
+
+  "Owner of token"
+  owner: User!
+
+  "Token Id"
+  tokenId: Int!
+}
+
+"User record"
+type User @entity(immutable: true) {
+  id: Bytes!
+}

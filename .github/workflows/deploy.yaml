@@ -17,6 +17,7 @@ on:
           - harvesters
           - magic
           - legions
+          - smol-bodies
           - smol-domains
           - treasure-fragments
           - treasure-tags
