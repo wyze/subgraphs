@@ -1,0 +1,27 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - name: Meem
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      address: "{{ meem_address }}"
+      abi: Meem
+      startBlock: {{ meem_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: Meem
+          file: {{{ abis }}}/Meem.json
+      eventHandlers:
+        - event: WanderingMerchantActiveTimeChanged(uint128,uint128)
+          handler: onActiveTimeChanged
+        - event: WanderingMerchantRecipeAdded(indexed uint64,uint32,uint32,uint32,uint8,(uint8,address,uint32,uint256,address)[])
+          handler: onRecipeAdded
+        - event: WanderingMerchantRecipeFulfilled(indexed uint64,indexed address)
+          handler: onRecipeFulfilled
+      file: ./src/mapping.ts

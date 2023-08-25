@@ -1,0 +1,15 @@
+{
+  "name": "meem",
+  "version": "1.0.0",
+  "description": "A subgraph for Meem.",
+  "license": "MIT",
+  "scripts": {
+    "codegen": "graph codegen",
+    "create": "graph create --node $GRAPH_NODE_ENDPOINT meem",
+    "deploy": "graph deploy meem --ipfs $GRAPH_IPFS_ENDPOINT --node $GRAPH_NODE_ENDPOINT --version-label v0.0.0",
+    "prepare": "run-s -l prepare:*",
+    "prepare:constants": "yarn --cwd ../../packages/constants prepare:arbitrum",
+    "prepare:subgraph": "mustache ../../node_modules/@shared/subgraph-config/src/arbitrum.json template.yaml > subgraph.yaml",
+    "test": "exit 0 && graph test"
+  }
+}

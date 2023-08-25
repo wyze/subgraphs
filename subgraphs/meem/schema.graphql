@@ -1,0 +1,75 @@
+enum InputType {
+  Consumable
+  AuxLegion
+  Unknown
+}
+
+enum OutputType {
+  Consumable
+  Erc20
+  Unknown
+}
+
+"Information about the merchant"
+type Merchant @entity {
+  id: Bytes!
+
+  "Time merchant closed"
+  closeTime: Int!
+
+  "Time merchant opened"
+  openTime: Int!
+}
+
+"Information about a recipe"
+type Recipe @entity(immutable: true) {
+  id: Bytes!
+
+  "Amount of trades available"
+  available: Int!
+
+  "Input accepted for trade"
+  input: InputType!
+
+  "Token id for input, if consumable"
+  inputTokenId: Int!
+}
+
+type Output @entity(immutable: true) {
+  id: Bytes!
+
+  "Address when output is Erc20"
+  address: Bytes!
+
+  "Amount of items in this output"
+  amount: Int!
+
+  "Output comes from here"
+  from: Bytes!
+
+  "Recipe for this output"
+  recipe: Recipe!
+
+  "Id of token transfered"
+  tokenId: Int!
+
+  "Output type"
+  type: OutputType!
+}
+
+type Trade @entity(immutable: true) {
+  id: Bytes!
+
+  "Recipe traded for"
+  recipe: Recipe!
+
+  "Timestamp of occurence"
+  timestamp: Int!
+
+  "User who made the trade"
+  user: User!
+}
+
+type User @entity(immutable: true) {
+  id: Bytes!
+}
