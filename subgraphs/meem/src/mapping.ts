@@ -1,25 +1,81 @@
-import { BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
+import { isZero } from "@shared/helpers";
+
+import { Transfer } from "../generated/Legions/ERC721";
 import {
+  Upgraded,
   WanderingMerchantActiveTimeChanged,
   WanderingMerchantRecipeAdded,
+  WanderingMerchantRecipeAdded1,
   WanderingMerchantRecipeFulfilled,
+  WanderingMerchantRecipeRemoved,
 } from "../generated/Meem/Meem";
-import { Merchant, Output, Recipe, Trade, User } from "../generated/schema";
+import {
+  Burn,
+  Merchant,
+  Output,
+  Recipe,
+  Trade,
+  User,
+} from "../generated/schema";
 
-const INPUT_TYPES = ["Consumable", "AuxLegion"];
 const OUTPUT_TYPES = ["Consumable", "Erc20"];
+
+function ensureBurn(): Burn {
+  const id = Bytes.fromUTF8("burn");
+
+  let burn = Burn.load(id);
+
+  if (!burn) {
+    burn = new Burn(id);
+
+    burn.tokenIds = new Array<i32>();
+    burn.save();
+  }
+
+  return burn;
+}
+
+function ensureMerchant(address: Address): Merchant {
+  let merchant = Merchant.load(address);
+
+  if (!merchant) {
+    merchant = new Merchant(address);
+
+    merchant.closeTime = 0;
+    merchant.openTime = 0;
+    merchant.version = 0;
+  }
+
+  return merchant;
+}
+
+function getInput(inputType: i32): string {
+  switch (inputType) {
+    case 0:
+      return "Consumable";
+    case 1:
+      return "AuxLegion";
+    case 3:
+      return "Keys";
+    default:
+      return "Unknown";
+  }
+}
+
+function getRecipeId(address: Address, recipeId: BigInt): Bytes {
+  const merchant = ensureMerchant(address);
+
+  return Bytes.fromI32(recipeId.toI32()).concatI32(merchant.version);
+}
 
 export function onActiveTimeChanged(
   event: WanderingMerchantActiveTimeChanged
 ): void {
   const params = event.params;
 
-  let merchant = Merchant.load(event.address);
-
-  if (!merchant) {
-    merchant = new Merchant(event.address);
-  }
+  const merchant = ensureMerchant(event.address);
 
   merchant.closeTime = params.closeTime.toI32();
   merchant.openTime = params.openTime.toI32();
@@ -27,22 +83,61 @@ export function onActiveTimeChanged(
   merchant.save();
 }
 
-export function onRecipeAdded(event: WanderingMerchantRecipeAdded): void {
+export function onRecipeAddedV1(event: WanderingMerchantRecipeAdded): void {
   const params = event.params;
-  const id = Bytes.fromI32(params.recipeId.toI32());
+  const id = getRecipeId(event.address, params.recipeId);
   const inputType = params.inputType;
   const outputs = params.outputs;
 
   const recipe = new Recipe(id);
 
   recipe.available = params.maxAvailable.toI32();
-  recipe.input = inputType > 1 ? "Unknown" : INPUT_TYPES[inputType];
+  recipe.createdAt = event.block.timestamp.toI32();
+  recipe.input = getInput(inputType);
   recipe.inputTokenId = params.inputTokenId.toI32();
+  recipe.inputAmount = 1;
 
   recipe.save();
 
   for (let index = 0; index < outputs.length; index++) {
-    const id = recipe.id.concat(Bytes.fromI32(index));
+    const id = recipe.id.concatI32(index);
+    const output = new Output(id);
+    const outputType = outputs[index].outputType;
+    const amount = outputs[index].amount;
+
+    output.address = outputs[index].outputAddress;
+    output.amount = amount.gt(BigInt.fromI32(1000))
+      ? BigInt.fromString(
+          amount.divDecimal(BigDecimal.fromString(`${1e18}`)).toString()
+        ).toI32()
+      : amount.toI32();
+    output.from = outputs[index].transferredFrom;
+    output.recipe = recipe.id;
+    output.tokenId = outputs[index].tokenId.toI32();
+    output.type = outputType > 1 ? "Unknown" : OUTPUT_TYPES[outputType];
+
+    output.save();
+  }
+}
+
+export function onRecipeAddedV2(event: WanderingMerchantRecipeAdded1): void {
+  const params = event.params;
+  const id = getRecipeId(event.address, params.recipeId);
+  const inputType = params.inputType;
+  const outputs = params.outputs;
+
+  const recipe = new Recipe(id);
+
+  recipe.available = params.maxAvailable.toI32();
+  recipe.createdAt = event.block.timestamp.toI32();
+  recipe.input = getInput(inputType);
+  recipe.inputTokenId = params.inputTokenId.toI32();
+  recipe.inputAmount = params.inputAmount.toI32();
+
+  recipe.save();
+
+  for (let index = 0; index < outputs.length; index++) {
+    const id = recipe.id.concatI32(index);
     const output = new Output(id);
     const outputType = outputs[index].outputType;
     const amount = outputs[index].amount;
@@ -66,7 +161,7 @@ export function onRecipeFulfilled(
   event: WanderingMerchantRecipeFulfilled
 ): void {
   const params = event.params;
-  const recipeId = Bytes.fromI32(params.recipeId.toI32());
+  const recipeId = getRecipeId(event.address, params.recipeId);
   const timestamp = event.block.timestamp.toI32();
   const id = params.user
     .concat(recipeId)
@@ -83,5 +178,43 @@ export function onRecipeFulfilled(
   trade.timestamp = timestamp;
   trade.user = params.user;
 
+  const recipe = Recipe.load(recipeId);
+
+  if (recipe && recipe.input == "AuxLegion") {
+    const burn = ensureBurn();
+
+    trade.legionBurned = burn.tokenIds[0];
+
+    burn.tokenIds = burn.tokenIds.slice(1);
+    burn.save();
+  }
+
   trade.save();
+}
+
+export function onRecipeRemoved(event: WanderingMerchantRecipeRemoved): void {
+  let recipe = Recipe.load(getRecipeId(event.address, event.params.recipeId));
+
+  if (recipe) {
+    recipe.removedAt = event.block.timestamp.toI32();
+    recipe.save();
+  }
+}
+
+export function onTransfer(event: Transfer): void {
+  if (!isZero(event.params.to)) {
+    return;
+  }
+
+  const burn = ensureBurn();
+
+  burn.tokenIds = burn.tokenIds.concat([event.params.tokenId.toI32()]);
+  burn.save();
+}
+
+export function onUpgraded(event: Upgraded): void {
+  const merchant = ensureMerchant(event.address);
+
+  merchant.version += 1;
+  merchant.save();
 }

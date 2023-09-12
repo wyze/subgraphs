@@ -1,6 +1,7 @@
 enum InputType {
   Consumable
   AuxLegion
+  Keys
   Unknown
 }
 
@@ -8,6 +9,14 @@ enum OutputType {
   Consumable
   Erc20
   Unknown
+}
+
+"Entity to store burned legions"
+type Burn @entity {
+  id: Bytes!
+
+  "Token ids burned in this transaction"
+  tokenIds: [Int!]!
 }
 
 "Information about the merchant"
@@ -19,20 +28,32 @@ type Merchant @entity {
 
   "Time merchant opened"
   openTime: Int!
+
+  "Version of merchant that is live"
+  version: Int!
 }
 
 "Information about a recipe"
-type Recipe @entity(immutable: true) {
+type Recipe @entity {
   id: Bytes!
 
   "Amount of trades available"
   available: Int!
+
+  "Time when recipe was created"
+  createdAt: Int!
 
   "Input accepted for trade"
   input: InputType!
 
   "Token id for input, if consumable"
   inputTokenId: Int!
+
+  "Amount for input"
+  inputAmount: Int!
+
+  "Time when recipe was removed"
+  removedAt: Int
 }
 
 type Output @entity(immutable: true) {
@@ -59,6 +80,9 @@ type Output @entity(immutable: true) {
 
 type Trade @entity(immutable: true) {
   id: Bytes!
+
+  "Legion burned for this trade, if applicable"
+  legionBurned: Int
 
   "Recipe traded for"
   recipe: Recipe!

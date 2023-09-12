@@ -18,10 +18,35 @@ dataSources:
         - name: Meem
           file: {{{ abis }}}/Meem.json
       eventHandlers:
+        - event: Upgraded(indexed address)
+          handler: onUpgraded
         - event: WanderingMerchantActiveTimeChanged(uint128,uint128)
           handler: onActiveTimeChanged
         - event: WanderingMerchantRecipeAdded(indexed uint64,uint32,uint32,uint32,uint8,(uint8,address,uint32,uint256,address)[])
-          handler: onRecipeAdded
+          handler: onRecipeAddedV1
+        - event: WanderingMerchantRecipeAdded(indexed uint64,uint32,uint32,uint32,uint256,uint8,(uint8,address,uint32,uint256,address)[])
+          handler: onRecipeAddedV2
         - event: WanderingMerchantRecipeFulfilled(indexed uint64,indexed address)
           handler: onRecipeFulfilled
+        - event: WanderingMerchantRecipeRemoved(indexed uint64)
+          handler: onRecipeRemoved
+      file: ./src/mapping.ts
+  - name: Legions
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      address: "{{ legion_address }}"
+      abi: ERC721
+      startBlock: {{ meem_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: ERC721
+          file: {{{ abis }}}/721.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: onTransfer
       file: ./src/mapping.ts
