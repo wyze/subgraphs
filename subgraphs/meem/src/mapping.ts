@@ -51,6 +51,14 @@ function ensureMerchant(address: Address): Merchant {
   return merchant;
 }
 
+function formatTime(time: BigInt): i32 {
+  const length = time.toString().length;
+
+  return length <= 10
+    ? time.toI32()
+    : BigInt.fromString(time.toString().slice(0, -3)).toI32();
+}
+
 function getInput(inputType: i32): string {
   switch (inputType) {
     case 0:
@@ -77,8 +85,8 @@ export function onActiveTimeChanged(
 
   const merchant = ensureMerchant(event.address);
 
-  merchant.closeTime = params.closeTime.toI32();
-  merchant.openTime = params.openTime.toI32();
+  merchant.closeTime = formatTime(params.closeTime);
+  merchant.openTime = formatTime(params.openTime);
 
   merchant.save();
 }
