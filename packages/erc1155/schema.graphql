@@ -90,9 +90,6 @@ type User @entity {
 
   daily: [UserDaily!]! @derivedFrom(field: "user")
   tokens: [UserToken!]! @derivedFrom(field: "user")
-
-  # Not derived because we need to loop the ids
-  listings: [Listing!]!
 }
 
 type UserDaily @entity {
