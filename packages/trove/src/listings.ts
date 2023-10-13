@@ -1,7 +1,7 @@
 import { Address, BigInt, ethereum, store } from "@graphprotocol/graph-ts";
 
 import { ONE } from "@shared/constants";
-import { formatTime, getConfig, getToken } from "@shared/helpers";
+import { formatTime, getConfig, getToken, remove } from "@shared/helpers";
 
 import { Listing } from "./entities";
 import { ensureListing } from "./models";
@@ -69,14 +69,6 @@ export function onBidAcceptedOrItemSold<T extends SoldParams>(params: T): void {
   } else {
     listing.save();
   }
-}
-
-function remove<T>(items: T[], item: T): T[] {
-  const index = items.indexOf(item);
-
-  return index == -1
-    ? items
-    : items.slice(0, index).concat(items.slice(index + 1));
 }
 
 export function removeListing(nft: Address, listing: Listing): void {
