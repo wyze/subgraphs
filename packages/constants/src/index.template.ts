@@ -1,4 +1,4 @@
-import { Address } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal } from "@graphprotocol/graph-ts";
 
 export const ADVANCED_QUESTING_ADDRESS = Address.fromString(
   "{{ advanced_questing_address }}"
