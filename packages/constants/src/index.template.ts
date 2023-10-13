@@ -29,6 +29,7 @@ export const MASTER_OF_COIN_ADDRESS = Address.fromString(
   "{{ master_of_coin_address }}"
 );
 export const MIDDLEMAN_ADDRESS = Address.fromString("{{ middleman_address }}");
+export const ONE = BigDecimal.fromString(`${1e18}`);
 export const REALM_VAULT_ADDRESS = Address.fromString(
   "{{ realm_vault_address }}"
 );

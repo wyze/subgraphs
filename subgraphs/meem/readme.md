@@ -2,7 +2,7 @@
 
 Current Schema:
 
-- sgd250
+- sgd263
 
 Dependent Views:
 
@@ -10,3 +10,4 @@ Dependent Views:
 - meem_output
 - meem_recipe
 - meem_trade
+- meem_trade_rollup

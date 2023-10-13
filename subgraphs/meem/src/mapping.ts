@@ -1,5 +1,6 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
+import { ONE } from "@shared/constants";
 import { isZero } from "@shared/helpers";
 
 import { Transfer } from "../generated/Legions/ERC721";
@@ -51,6 +52,12 @@ function ensureMerchant(address: Address): Merchant {
   return merchant;
 }
 
+function formatAmount(amount: BigInt): i32 {
+  return amount.gt(BigInt.fromI32(1000))
+    ? BigInt.fromString(amount.divDecimal(ONE).toString()).toI32()
+    : amount.toI32();
+}
+
 function formatTime(time: BigInt): i32 {
   const length = time.toString().length;
 
@@ -65,6 +72,8 @@ function getInput(inputType: i32): string {
       return "Consumable";
     case 1:
       return "AuxLegion";
+    case 2:
+      return "Corruption";
     case 3:
       return "Keys";
     default:
@@ -140,7 +149,7 @@ export function onRecipeAddedV2(event: WanderingMerchantRecipeAdded1): void {
   recipe.createdAt = event.block.timestamp.toI32();
   recipe.input = getInput(inputType);
   recipe.inputTokenId = params.inputTokenId.toI32();
-  recipe.inputAmount = params.inputAmount.toI32();
+  recipe.inputAmount = formatAmount(params.inputAmount);
 
   recipe.save();
 
@@ -148,14 +157,9 @@ export function onRecipeAddedV2(event: WanderingMerchantRecipeAdded1): void {
     const id = recipe.id.concatI32(index);
     const output = new Output(id);
     const outputType = outputs[index].outputType;
-    const amount = outputs[index].amount;
 
     output.address = outputs[index].outputAddress;
-    output.amount = amount.gt(BigInt.fromI32(1000))
-      ? BigInt.fromString(
-          amount.divDecimal(BigDecimal.fromString(`${1e18}`)).toString()
-        ).toI32()
-      : amount.toI32();
+    output.amount = formatAmount(outputs[index].amount);
     output.from = outputs[index].transferredFrom;
     output.recipe = recipe.id;
     output.tokenId = outputs[index].tokenId.toI32();
