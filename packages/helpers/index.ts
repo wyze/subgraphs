@@ -1,4 +1,5 @@
 export * from "./src/addresses";
+export * from "./src/arrays";
 export * from "./src/handlers";
 export * from "./src/models";
 export * from "./src/numbers";

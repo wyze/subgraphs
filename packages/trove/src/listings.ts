@@ -1,12 +1,7 @@
-import {
-  Address,
-  BigDecimal,
-  BigInt,
-  ethereum,
-  store,
-} from "@graphprotocol/graph-ts";
+import { Address, BigInt, ethereum, store } from "@graphprotocol/graph-ts";
 
-import { ensureUser, getConfig, getToken } from "@shared/helpers";
+import { ONE } from "@shared/constants";
+import { formatTime, getConfig, getToken } from "@shared/helpers";
 
 import { Listing } from "./entities";
 import { ensureListing } from "./models";
@@ -35,17 +30,10 @@ export function onItemListedOrUpdated<T extends ListedParams>(params: T): void {
   }
 
   const listing = ensureListing(params.nft, params.tokenId, params.seller);
-  const expiration = params.expirationTime;
 
   listing.amount = params.quantity.toI32();
-  listing.expires = (
-    expiration.toString().length > 10
-      ? expiration.div(BigInt.fromI32(1000))
-      : expiration
-  ).toI32();
-  listing.price = params.pricePerItem.divDecimal(
-    BigDecimal.fromString(`${1e18}`)
-  );
+  listing.expires = formatTime(params.expirationTime);
+  listing.price = params.pricePerItem.divDecimal(ONE);
   listing.status = "Active";
   listing.token = getToken(params.nft, params.tokenId.toI32()).id;
   listing.user = params.seller;
