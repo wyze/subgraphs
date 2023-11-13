@@ -9,6 +9,7 @@ enum InputType {
 enum OutputType {
   Consumable
   Erc20
+  Erc1155
   Unknown
 }
 

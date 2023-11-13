@@ -21,7 +21,7 @@ import {
   User,
 } from "../generated/schema";
 
-const OUTPUT_TYPES = ["Consumable", "Erc20"];
+const OUTPUT_TYPES = ["Consumable", "Erc20", "Erc1155"];
 
 function ensureBurn(): Burn {
   const id = Bytes.fromUTF8("burn");
@@ -53,7 +53,7 @@ function ensureMerchant(address: Address): Merchant {
 }
 
 function formatAmount(amount: BigInt): i32 {
-  return amount.gt(BigInt.fromI32(1000))
+  return amount.gt(BigInt.fromI32(100000))
     ? BigInt.fromString(amount.divDecimal(ONE).toString()).toI32()
     : amount.toI32();
 }
@@ -153,7 +153,9 @@ export function onRecipeAddedV2(event: WanderingMerchantRecipeAdded1): void {
 
   recipe.save();
 
-  for (let index = 0; index < outputs.length; index++) {
+  const length = outputs.length;
+
+  for (let index = 0; index < length; index++) {
     const id = recipe.id.concatI32(index);
     const output = new Output(id);
     const outputType = outputs[index].outputType;
@@ -163,7 +165,7 @@ export function onRecipeAddedV2(event: WanderingMerchantRecipeAdded1): void {
     output.from = outputs[index].transferredFrom;
     output.recipe = recipe.id;
     output.tokenId = outputs[index].tokenId.toI32();
-    output.type = outputType > 1 ? "Unknown" : OUTPUT_TYPES[outputType];
+    output.type = outputType > 2 ? "Unknown" : OUTPUT_TYPES[outputType];
 
     output.save();
   }
